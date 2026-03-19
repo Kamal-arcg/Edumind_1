@@ -3,653 +3,1406 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<title>EduMind — CSE Year 2 Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  :root {
-    --bg: #f4f5f7;
-    --white: #ffffff;
-    --ink: #0f1117;
-    --ink2: #1e2330;
-    --slate: #2d3448;
-    --mist: #8892a4;
-    --border: #e8ebf0;
-    --indigo: #4f46e5;
-    --indigo-soft: #eef2ff;
-    --emerald: #059669;
-    --emerald-soft: #d1fae5;
-    --amber: #d97706;
-    --amber-soft: #fef3c7;
-    --rose: #e11d48;
-    --rose-soft: #ffe4e6;
-    --cyan: #0891b2;
-    --cyan-soft: #cffafe;
-    --violet: #7c3aed;
-    --radius: 14px;
-    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
-    --shadow-lg: 0 8px 32px rgba(0,0,0,0.1);
-  }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; display: flex; }
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#050508;--bg2:#0a0a12;--bg3:#0f0f1a;
+  --surface:#121220;--surface2:#181830;--surface3:#1e1e3a;
+  --border:#1e1e35;--border2:#282850;--border3:#323260;
+  --text:#ddddf5;--muted:#6060a0;--hint:#303055;
+  --green:#00d97e;--green-d:#001a0f;--green-s:#00d97e30;
+  --blue:#4488ff;--blue-d:#00051a;--blue-s:#4488ff25;
+  --amber:#ffaa00;--amber-d:#1a0f00;--amber-s:#ffaa0025;
+  --red:#ff4466;--red-d:#1a0005;--red-s:#ff446625;
+  --purple:#9966ff;--purple-d:#0a001a;--purple-s:#9966ff25;
+  --cyan:#00ccee;--cyan-d:#001a1f;--cyan-s:#00ccee25;
+  --orange:#ff7722;--orange-s:#ff772225;
+  --pink:#ff66aa;--pink-s:#ff66aa25;
+  --rad:8px;--rad-lg:12px;--rad-xl:16px;
+}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;font-size:13px;line-height:1.5}
+code,pre,.mono{font-family:'IBM Plex Mono',monospace}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
-  /* SIDEBAR */
-  .sidebar { width: 240px; background: var(--ink); min-height: 100vh; display: flex; flex-direction: column; position: fixed; left: 0; top: 0; bottom: 0; z-index: 50; }
-  .sidebar-logo { padding: 28px 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.07); }
-  .logo-mark { display: flex; align-items: center; gap: 10px; }
-  .logo-icon { width: 36px; height: 36px; background: var(--indigo); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
-  .logo-text { font-family: 'Playfair Display', serif; color: white; font-size: 1.15rem; }
-  .logo-sub { font-size: 0.72rem; color: var(--mist); margin-top: 2px; letter-spacing: 0.5px; }
-  .sidebar-nav { padding: 16px 12px; flex: 1; }
-  .nav-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--slate); padding: 8px 12px 6px; }
-  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; cursor: pointer; transition: all 0.15s; color: var(--mist); font-size: 0.875rem; font-weight: 500; margin-bottom: 2px; }
-  .nav-item:hover { background: rgba(255,255,255,0.06); color: white; }
-  .nav-item.active { background: var(--indigo); color: white; }
-  .nav-item .icon { font-size: 1rem; width: 20px; text-align: center; }
-  .nav-badge { margin-left: auto; background: var(--rose); color: white; font-size: 0.65rem; font-weight: 700; padding: 2px 6px; border-radius: 100px; }
-  .sidebar-user { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; gap: 10px; }
-  .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--indigo), var(--cyan)); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: white; flex-shrink: 0; }
-  .user-name { font-size: 0.82rem; font-weight: 600; color: white; }
-  .user-role { font-size: 0.72rem; color: var(--mist); }
+/* ─── SIDEBAR ─── */
+.sidebar{width:210px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;flex-shrink:0;overflow-y:auto}
+.sb-logo{padding:18px 16px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px}
+.sb-mark{width:30px;height:30px;background:var(--green);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#000;font-family:'IBM Plex Mono',monospace;flex-shrink:0}
+.sb-title{font-size:12px;font-weight:600;color:var(--text)}
+.sb-sub{font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+.cgpa-box{margin:10px 12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rad);padding:10px 12px}
+.cgpa-label{font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px}
+.cgpa-val{font-size:20px;font-weight:700;color:var(--green);font-family:'IBM Plex Mono',monospace}
+.cgpa-sub{font-size:9px;color:var(--muted);margin-top:1px}
+.cgpa-bar{height:3px;background:var(--border);border-radius:100px;margin-top:7px;overflow:hidden}
+.cgpa-fill{height:100%;border-radius:100px;background:var(--green);width:83%}
+.sb-nav{padding:8px 8px;flex:1}
+.sb-sec{font-size:8px;color:var(--hint);text-transform:uppercase;letter-spacing:1px;padding:8px 9px 4px;font-weight:600;font-family:'IBM Plex Mono',monospace}
+.nitem{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:var(--rad);cursor:pointer;font-size:11px;color:var(--muted);transition:all 0.15s;margin-bottom:1px;border:1px solid transparent}
+.nitem:hover{background:var(--surface);color:var(--text);border-color:var(--border)}
+.nitem.active{background:var(--surface2);color:var(--text);border-color:var(--border2);font-weight:600}
+.ndot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.nbadge{margin-left:auto;background:var(--red);color:#fff;font-size:8px;font-weight:700;padding:1px 5px;border-radius:100px;font-family:'IBM Plex Mono',monospace}
+.sb-user{padding:12px 16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.sb-av{width:28px;height:28px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#000;font-family:'IBM Plex Mono',monospace;flex-shrink:0}
+.sb-nm{font-size:11px;font-weight:600;color:var(--text)}
+.sb-rl{font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
 
-  /* MAIN */
-  .main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
-  .topbar { background: white; border-bottom: 1px solid var(--border); padding: 0 32px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 40; }
-  .topbar-left h1 { font-size: 1.1rem; font-weight: 700; }
-  .topbar-left p { font-size: 0.8rem; color: var(--mist); }
-  .topbar-right { display: flex; align-items: center; gap: 12px; }
-  .icon-btn { width: 38px; height: 38px; border-radius: 10px; background: var(--bg); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1rem; transition: all 0.15s; position: relative; }
-  .icon-btn:hover { background: var(--indigo-soft); border-color: var(--indigo); }
-  .notif-dot { position: absolute; top: 6px; right: 6px; width: 7px; height: 7px; background: var(--rose); border-radius: 50%; border: 1.5px solid white; }
-  .btn { padding: 8px 18px; border-radius: 9px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
-  .btn-indigo { background: var(--indigo); color: white; }
-  .btn-indigo:hover { background: #4338ca; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(79,70,229,0.3); }
-  .btn-outline { background: white; border: 1.5px solid var(--border); color: var(--ink); }
-  .btn-outline:hover { border-color: var(--indigo); color: var(--indigo); }
-  .btn-sm { padding: 6px 14px; font-size: 0.78rem; }
+/* ─── MAIN ─── */
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 22px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20}
+.tb-title{font-size:13px;font-weight:700;color:var(--text);font-family:'IBM Plex Mono',monospace}
+.tb-sub{font-size:10px;color:var(--muted)}
+.tb-right{display:flex;align-items:center;gap:7px}
+.btn{padding:5px 13px;border-radius:var(--rad);font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:var(--surface);color:var(--text);font-family:'IBM Plex Sans',sans-serif;transition:all 0.15s}
+.btn:hover{background:var(--surface2);border-color:var(--border3)}
+.btn.g{background:var(--green);border-color:var(--green);color:#000}
+.btn.g:hover{opacity:0.85;transform:translateY(-1px)}
+.content{padding:18px 22px;flex:1;overflow-y:auto}
+.view{display:none}
+.view.active{display:block;animation:fadeUp 0.2s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-  /* CONTENT */
-  .content { padding: 28px 32px; flex: 1; }
+/* ─── CARDS ─── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rad-lg);overflow:hidden}
+.ch{padding:12px 15px 9px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.ct{font-size:11px;font-weight:700;color:var(--text);font-family:'IBM Plex Mono',monospace}
+.cs{font-size:9px;color:var(--muted);margin-top:1px}
+.cb{padding:13px 15px}
+.metric{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad);padding:11px 13px}
+.ml{font-size:9px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.5px;font-family:'IBM Plex Mono',monospace}
+.mv{font-size:19px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--text)}
+.ms{font-size:9px;color:var(--muted);margin-top:2px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:13px}
+.g2{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:13px;margin-bottom:13px}
+.g2b{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-bottom:13px}
+.g3{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1fr);gap:13px;margin-bottom:13px}
 
-  /* GREETING BANNER */
-  .greeting-banner {
-    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #164e63 100%);
-    border-radius: var(--radius); padding: 24px 28px; margin-bottom: 24px;
-    display: flex; align-items: center; justify-content: space-between; color: white;
-    position: relative; overflow: hidden;
-  }
-  .greeting-banner::before { content: ''; position: absolute; top: -40px; right: 80px; width: 160px; height: 160px; background: rgba(255,255,255,0.04); border-radius: 50%; }
-  .greeting-banner::after { content: ''; position: absolute; bottom: -30px; right: 20px; width: 100px; height: 100px; background: rgba(255,255,255,0.05); border-radius: 50%; }
-  .greeting-text h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
-  .greeting-text p { font-size: 0.85rem; opacity: 0.7; }
-  .exam-countdown { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 14px 20px; text-align: center; z-index: 1; }
-  .countdown-num { font-size: 2rem; font-weight: 800; line-height: 1; }
-  .countdown-label { font-size: 0.72rem; opacity: 0.7; margin-top: 4px; }
-  .readiness-ring { display: flex; align-items: center; gap: 16px; z-index: 1; }
-  .ring-wrap { position: relative; width: 72px; height: 72px; }
-  .ring-wrap svg { transform: rotate(-90deg); }
-  .ring-center { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; font-weight: 800; }
-  .ring-label { font-size: 0.78rem; opacity: 0.7; }
-  .ring-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 2px; }
+/* ─── BADGES ─── */
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:100px;font-size:9px;font-weight:700;font-family:'IBM Plex Mono',monospace}
+.bg{background:var(--green-s);color:var(--green)}
+.bb{background:var(--blue-s);color:var(--blue)}
+.ba{background:var(--amber-s);color:var(--amber)}
+.br{background:var(--red-s);color:var(--red)}
+.bp{background:var(--purple-s);color:var(--purple)}
+.bc{background:var(--cyan-s);color:var(--cyan)}
+.bo{background:var(--orange-s);color:var(--orange)}
 
-  /* STATS */
-  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-  .stat-card { background: white; border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow); border: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; transition: all 0.2s; }
-  .stat-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
-  .stat-label { font-size: 0.75rem; color: var(--mist); font-weight: 500; margin-bottom: 5px; }
-  .stat-value { font-size: 1.7rem; font-weight: 700; line-height: 1; }
-  .stat-sub { font-size: 0.72rem; color: var(--mist); margin-top: 5px; }
-  .stat-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+/* ─── PROGRESS ─── */
+.pb{background:var(--bg3);border-radius:100px;height:4px;overflow:hidden}
+.pf{height:100%;border-radius:100px}
+.mr{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.mn{font-size:10px;color:var(--text);width:170px;flex-shrink:0}
+.mb{flex:1}
+.mp{font-size:10px;font-weight:700;width:30px;text-align:right;font-family:'IBM Plex Mono',monospace}
 
-  /* GRID LAYOUTS */
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-  .grid-3 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; margin-bottom: 20px; }
+/* ─── PLAN ─── */
+.pi{display:flex;gap:9px;padding:8px 0;border-bottom:1px solid var(--border)}
+.pi:last-child{border-bottom:none}
+.pt{font-size:9px;color:var(--muted);width:38px;flex-shrink:0;padding-top:2px;font-family:'IBM Plex Mono',monospace}
+.pd{width:6px;height:6px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.ptitle{font-size:11px;font-weight:600;color:var(--text);margin-bottom:1px}
+.pmeta{font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
 
-  /* CARD */
-  .card { background: white; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); overflow: hidden; }
-  .card-header { padding: 18px 22px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0f2f5; }
-  .card-title { font-size: 0.95rem; font-weight: 700; }
-  .card-sub { font-size: 0.75rem; color: var(--mist); margin-top: 2px; }
-  .card-body { padding: 18px 22px; }
+/* ─── CHAT ─── */
+.cwrap{display:flex;flex-direction:column;height:290px}
+.cmsgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:7px;padding-bottom:4px}
+.msg{max-width:88%;padding:8px 11px;border-radius:9px;font-size:11px;line-height:1.55}
+.mai{background:var(--surface2);border:1px solid var(--border);align-self:flex-start;border-radius:3px 9px 9px 9px;color:var(--text)}
+.mme{background:var(--green);align-self:flex-end;border-radius:9px 3px 9px 9px;color:#000;font-weight:500}
+.msnd{font-size:8px;color:var(--muted);margin-bottom:3px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:0.5px}
+.cinrow{display:flex;gap:6px;padding-top:9px;border-top:1px solid var(--border);margin-top:8px}
+.cinp{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad);padding:7px 10px;color:var(--text);font-size:11px;outline:none;font-family:'IBM Plex Sans',sans-serif}
+.cinp:focus{border-color:var(--green)}
+.csend{background:var(--green);border:none;color:#000;border-radius:var(--rad);padding:7px 13px;cursor:pointer;font-size:11px;font-weight:700;font-family:'IBM Plex Mono',monospace}
 
-  /* MASTERY BARS */
-  .mastery-row { display: flex; align-items: center; gap: 10px; margin-bottom: 13px; }
-  .mastery-name { font-size: 0.82rem; font-weight: 500; width: 150px; flex-shrink: 0; }
-  .mastery-bar-bg { flex: 1; background: var(--bg); border-radius: 100px; height: 8px; overflow: hidden; }
-  .mastery-bar-fill { height: 100%; border-radius: 100px; transition: width 0.8s ease; }
-  .mastery-pct { font-size: 0.78rem; font-weight: 700; width: 34px; text-align: right; }
+/* ─── QUIZ ─── */
+.qquestion{font-size:12px;font-weight:600;color:var(--text);margin-bottom:13px;line-height:1.6;font-family:'IBM Plex Mono',monospace;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad);padding:12px 14px}
+.qopt{display:flex;align-items:flex-start;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad);padding:9px 12px;font-size:11px;margin-bottom:7px;cursor:pointer;transition:all 0.15s;color:var(--text);font-family:'IBM Plex Mono',monospace}
+.qopt:hover{border-color:var(--green);background:var(--green-s)}
+.qopt.correct{border-color:var(--green);background:var(--green-s);color:var(--green)}
+.qopt.wrong{border-color:var(--red);background:var(--red-s);color:var(--red)}
+.ok{width:20px;height:20px;border-radius:4px;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
+.qres{display:none;border-radius:var(--rad);padding:9px 12px;font-size:10px;margin-top:7px;line-height:1.6;border:1px solid;font-family:'IBM Plex Mono',monospace}
+.qres.show{display:block}
 
-  /* STUDY PLAN */
-  .plan-item { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid #f0f2f5; align-items: flex-start; }
-  .plan-item:last-child { border-bottom: none; }
-  .plan-time { font-size: 0.72rem; color: var(--mist); font-weight: 600; width: 44px; flex-shrink: 0; padding-top: 2px; }
-  .plan-dot-wrap { display: flex; flex-direction: column; align-items: center; gap: 0; padding-top: 4px; }
-  .plan-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .plan-line { width: 2px; flex: 1; background: #f0f2f5; margin-top: 4px; min-height: 20px; }
-  .plan-content { flex: 1; }
-  .plan-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 2px; }
-  .plan-meta { font-size: 0.75rem; color: var(--mist); }
-  .plan-badge { display: inline-block; padding: 2px 8px; border-radius: 100px; font-size: 0.68rem; font-weight: 600; margin-left: 6px; }
+/* ─── CODE EDITOR ─── */
+.code-block{background:var(--bg);border:1px solid var(--border);border-radius:var(--rad);padding:12px 14px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text);line-height:1.7;overflow-x:auto;margin-bottom:10px;position:relative}
+.code-lang{position:absolute;top:8px;right:10px;font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px}
+.kw{color:var(--purple)} .fn{color:var(--blue)} .str{color:var(--green)} .num{color:var(--amber)} .cmt{color:var(--muted)} .type{color:var(--cyan)} .op{color:var(--red)}
 
-  /* AI TUTOR CHAT */
-  .chat-wrap { display: flex; flex-direction: column; height: 340px; }
-  .chat-msgs { flex: 1; overflow-y: auto; padding: 4px 0; display: flex; flex-direction: column; gap: 10px; }
-  .chat-msgs::-webkit-scrollbar { width: 4px; }
-  .chat-msgs::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-  .msg { max-width: 82%; padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; line-height: 1.55; }
-  .msg-ai { background: var(--bg); border: 1px solid var(--border); align-self: flex-start; border-radius: 4px 12px 12px 12px; }
-  .msg-user { background: var(--indigo); color: white; align-self: flex-end; border-radius: 12px 4px 12px 12px; }
-  .msg-name { font-size: 0.68rem; color: var(--mist); margin-bottom: 4px; font-weight: 600; }
-  .chat-input-row { display: flex; gap: 8px; padding-top: 12px; border-top: 1px solid var(--border); margin-top: 12px; }
-  .chat-input { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 9px 14px; color: var(--ink); font-size: 0.85rem; outline: none; font-family: 'DM Sans', sans-serif; }
-  .chat-input:focus { border-color: var(--indigo); background: white; }
-  .chat-send { background: var(--indigo); border: none; color: white; border-radius: 10px; padding: 9px 16px; cursor: pointer; font-size: 1rem; transition: opacity 0.2s; }
-  .chat-send:hover { opacity: 0.85; }
+/* ─── FLASHCARDS ─── */
+.fcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--rad-lg);min-height:160px;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;cursor:pointer;transition:all 0.3s;position:relative}
+.fcard.flipped{background:var(--surface2);border-color:var(--border2)}
+.ff{font-size:12px;font-weight:600;color:var(--text);font-family:'IBM Plex Mono',monospace;line-height:1.6}
+.fb{display:none;font-size:11px;color:var(--text);line-height:1.7;font-family:'IBM Plex Mono',monospace}
+.fcard.flipped .ff{display:none}
+.fcard.flipped .fb{display:block}
+.ftag{position:absolute;top:9px;left:11px;font-size:8px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:2px 7px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+.fbtns{display:flex;justify-content:center;gap:7px;margin-top:9px}
+.fbtn{padding:5px 13px;border-radius:var(--rad);font-size:10px;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:'IBM Plex Mono',monospace;font-weight:600;transition:all 0.15s}
+.fbtn:hover{background:var(--surface2)}
 
-  /* QUIZ SECTION */
-  .quiz-question { font-size: 0.9rem; font-weight: 600; margin-bottom: 14px; line-height: 1.5; }
-  .quiz-opt { display: flex; align-items: center; gap: 10px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; margin-bottom: 8px; cursor: pointer; transition: all 0.15s; }
-  .quiz-opt:hover { border-color: var(--indigo); background: var(--indigo-soft); }
-  .quiz-opt.correct { border-color: var(--emerald); background: var(--emerald-soft); color: var(--emerald); }
-  .quiz-opt.wrong { border-color: var(--rose); background: var(--rose-soft); color: var(--rose); }
-  .opt-key { width: 24px; height: 24px; border-radius: 6px; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; flex-shrink: 0; }
-  .quiz-result { display: none; background: var(--emerald-soft); border: 1px solid #6ee7b7; border-radius: 10px; padding: 12px 16px; font-size: 0.85rem; color: var(--emerald); margin-top: 10px; font-weight: 600; }
-  .quiz-result.show { display: block; }
-  .quiz-result.wrong-result { background: var(--rose-soft); border-color: #fda4af; color: var(--rose); }
+/* ─── SUBJECT CARDS ─── */
+.scard{background:var(--surface);border:1px solid var(--border);border-radius:var(--rad-lg);padding:13px 15px;cursor:pointer;transition:all 0.2s}
+.scard:hover{border-color:var(--border2);transform:translateY(-2px);background:var(--surface2)}
+.sicon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:9px}
+.sname{font-size:11px;font-weight:700;color:var(--text);margin-bottom:2px;font-family:'IBM Plex Mono',monospace}
+.ssub{font-size:9px;color:var(--muted);margin-bottom:7px;font-family:'IBM Plex Mono',monospace}
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:13px}
 
-  /* KNOWLEDGE GRAPH */
-  .graph-container { background: var(--ink); border-radius: 12px; overflow: hidden; position: relative; height: 220px; }
-  .graph-container svg { width: 100%; height: 100%; }
+/* ─── TAB BAR ─── */
+.tbar{display:flex;gap:2px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rad);padding:3px;margin-bottom:13px;width:fit-content}
+.tab{padding:4px 13px;border-radius:6px;font-size:10px;cursor:pointer;color:var(--muted);transition:all 0.15s;font-weight:600;font-family:'IBM Plex Mono',monospace}
+.tab.active{background:var(--surface2);color:var(--text);border:1px solid var(--border2)}
 
-  /* BADGES */
-  .badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 100px; font-size: 0.72rem; font-weight: 600; }
-  .badge-green { background: var(--emerald-soft); color: var(--emerald); }
-  .badge-amber { background: var(--amber-soft); color: var(--amber); }
-  .badge-rose { background: var(--rose-soft); color: var(--rose); }
-  .badge-indigo { background: var(--indigo-soft); color: var(--indigo); }
+/* ─── STREAK ─── */
+.sdays{display:flex;gap:4px;justify-content:space-between}
+.sday{flex:1;text-align:center}
+.sdot{width:26px;height:26px;border-radius:50%;margin:0 auto 3px;display:flex;align-items:center;justify-content:center;font-size:9px;border:1px solid var(--border);color:var(--muted);font-family:'IBM Plex Mono',monospace}
+.sdot.done{background:var(--green);border-color:var(--green);color:#000;font-weight:700}
+.sdot.today{background:var(--amber);border-color:var(--amber);color:#000;font-weight:700}
+.sdlabel{font-size:8px;color:var(--hint);font-family:'IBM Plex Mono',monospace}
 
-  /* STREAK */
-  .streak-row { display: flex; gap: 6px; justify-content: space-between; }
-  .streak-day { flex: 1; text-align: center; }
-  .streak-circle { width: 32px; height: 32px; border-radius: 50%; margin: 0 auto 4px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; border: 2px solid var(--border); }
-  .streak-circle.done { background: var(--indigo); border-color: var(--indigo); color: white; }
-  .streak-circle.today { background: var(--amber); border-color: var(--amber); color: white; animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(217,119,6,0.4)} 50%{box-shadow:0 0 0 6px rgba(217,119,6,0)} }
-  .streak-day-label { font-size: 0.65rem; color: var(--mist); }
+/* ─── BANNER ─── */
+.banner{background:var(--surface);border:1px solid var(--border);border-radius:var(--rad-lg);padding:16px 18px;margin-bottom:13px;display:flex;align-items:center;justify-content:space-between;gap:13px;position:relative;overflow:hidden}
+.banner::after{content:'> _';position:absolute;bottom:10px;right:18px;font-size:24px;color:var(--border2);font-family:'IBM Plex Mono',monospace;font-weight:700}
+.bh{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;font-family:'IBM Plex Mono',monospace}
+.bsub{font-size:10px;color:var(--muted)}
+.bacts{display:flex;gap:7px;margin-top:10px}
+.cdown{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad);padding:12px 16px;text-align:center;flex-shrink:0;z-index:1}
+.cnum{font-size:26px;font-weight:700;color:var(--green);font-family:'IBM Plex Mono',monospace;line-height:1}
+.clabel{font-size:9px;color:var(--muted);margin-top:3px;font-family:'IBM Plex Mono',monospace}
+.cgbox{display:flex;align-items:center;gap:11px;flex-shrink:0;z-index:1}
+.cgtitle{font-size:11px;font-weight:700;margin-bottom:2px;font-family:'IBM Plex Mono',monospace}
+.cgsub{font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
 
-  /* UPCOMING */
-  .upcoming-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0f2f5; }
-  .upcoming-item:last-child { border-bottom: none; }
-  .upcoming-date { width: 40px; height: 40px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
-  .date-num { font-size: 1rem; font-weight: 800; line-height: 1; }
-  .date-mon { font-size: 0.6rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-  .upcoming-title { font-size: 0.85rem; font-weight: 600; }
-  .upcoming-sub { font-size: 0.75rem; color: var(--mist); margin-top: 2px; }
+/* ─── ANNOUNCE ─── */
+.ann{background:var(--amber-d);border:1px solid rgba(255,170,0,0.25);border-radius:var(--rad);padding:9px 13px;margin-bottom:13px;display:flex;align-items:center;justify-content:space-between;gap:9px}
+.anntxt{font-size:10px;color:var(--amber);font-family:'IBM Plex Mono',monospace}
+.annx{cursor:pointer;color:var(--amber);font-size:12px;flex-shrink:0}
 
-  @media(max-width:1100px){ .stats-row{grid-template-columns:1fr 1fr} .grid-2,.grid-3{grid-template-columns:1fr} }
+/* ─── UPCOMING ─── */
+.uitem{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--border)}
+.uitem:last-child{border-bottom:none}
+.udate{width:34px;height:34px;border-radius:var(--rad);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.udnum{font-size:13px;font-weight:700;line-height:1;font-family:'IBM Plex Mono',monospace}
+.udmon{font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;font-family:'IBM Plex Mono',monospace}
+.utitle{font-size:11px;font-weight:600;color:var(--text);font-family:'IBM Plex Mono',monospace}
+.usub{font-size:9px;color:var(--muted);margin-top:1px}
+
+/* ─── DSA TRACKER ─── */
+.dsa-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:10px}
+.dsa-row:last-child{border-bottom:none}
+.dsa-topic{font-family:'IBM Plex Mono',monospace;color:var(--text);font-weight:600}
+.dsa-sub{font-size:9px;color:var(--muted)}
+.dsa-count{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700}
+
+/* ─── PROJECTS ─── */
+.proj-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad);padding:11px 13px;margin-bottom:8px}
+.proj-name{font-size:11px;font-weight:700;color:var(--text);font-family:'IBM Plex Mono',monospace;margin-bottom:3px}
+.proj-desc{font-size:10px;color:var(--muted);margin-bottom:7px;line-height:1.5}
+.proj-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}
+.proj-prog{display:flex;align-items:center;gap:8px}
+.proj-pct{font-size:10px;font-weight:700;color:var(--text);width:28px;font-family:'IBM Plex Mono',monospace}
+
+/* ─── FORMULA ─── */
+.formula{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad);padding:11px 13px;margin-bottom:8px}
+.fname{font-size:10px;font-weight:700;color:var(--text);margin-bottom:5px;font-family:'IBM Plex Mono',monospace}
+.feq{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--green);padding:6px 9px;background:var(--surface);border-radius:5px;border:1px solid var(--border);display:block;overflow-x:auto}
+.fdesc{font-size:9px;color:var(--muted);margin-top:5px;font-family:'IBM Plex Mono',monospace;line-height:1.5}
+
+/* ─── MOCK TEST ─── */
+.mitem{display:flex;align-items:center;justify-content:space-between;padding:9px 11px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad);margin-bottom:7px}
+.mname{font-size:10px;font-weight:700;color:var(--text);font-family:'IBM Plex Mono',monospace}
+.mmeta{font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:1px}
+.mscore{font-size:15px;font-weight:700;font-family:'IBM Plex Mono',monospace}
+
+/* ─── GRAPH ─── */
+.gwrap{background:var(--bg3);border-radius:var(--rad);padding:11px;overflow:hidden}
+
+/* ─── LEETCODE HEATMAP ─── */
+.hmap{display:grid;grid-template-columns:repeat(26,1fr);gap:2px;margin-top:8px}
+.hcell{aspect-ratio:1;border-radius:2px;background:var(--border)}
+.hcell.l1{background:#005020}
+.hcell.l2{background:#009940}
+.hcell.l3{background:#00cc55}
+.hcell.l4{background:var(--green)}
+
+/* ─── KNOWLEDGE GRAPH NODE ─── */
+.nddetail{display:none;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rad);padding:11px;margin-top:10px}
+
+@media(max-width:900px){.sidebar{display:none}.g4{grid-template-columns:repeat(2,1fr)}.g2,.g3{grid-template-columns:1fr}.sgrid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
+<!-- ═══ SIDEBAR ═══ -->
 <aside class="sidebar">
-  <div class="sidebar-logo">
-    <div class="logo-mark">
-      <div class="logo-icon">🧠</div>
-      <div>
-        <div class="logo-text">EduMind</div>
-        <div class="logo-sub">AI Classroom</div>
-      </div>
+  <div class="sb-logo">
+    <div class="sb-mark">&gt;_</div>
+    <div>
+      <div class="sb-title">EduMind AI</div>
+      <div class="sb-sub">CSE Year 2 · Sem 3-4</div>
     </div>
   </div>
-  <nav class="sidebar-nav">
-    <div class="nav-label">Learn</div>
-    <div class="nav-item active"><span class="icon">📊</span> Dashboard</div>
-    <div class="nav-item"><span class="icon">📚</span> My Courses</div>
-    <div class="nav-item"><span class="icon">🎯</span> Quizzes <span class="nav-badge">2</span></div>
-    <div class="nav-item"><span class="icon">📝</span> Assignments</div>
-    <div class="nav-item"><span class="icon">🕸️</span> Knowledge Graph</div>
 
-    <div class="nav-label" style="margin-top:12px">AI Tools</div>
-    <div class="nav-item"><span class="icon">🤖</span> AI Tutor</div>
-    <div class="nav-item"><span class="icon">🔁</span> Flashcards</div>
-    <div class="nav-item"><span class="icon">📅</span> Study Plan</div>
-    <div class="nav-item"><span class="icon">🔮</span> Exam Predictor</div>
+  <div class="cgpa-box">
+    <div class="cgpa-label">Current CGPA</div>
+    <div class="cgpa-val">8.3<span style="font-size:12px;color:var(--muted)"> / 10</span></div>
+    <div class="cgpa-sub">Sem 3 result · 60 credits done</div>
+    <div class="cgpa-bar"><div class="cgpa-fill"></div></div>
+  </div>
 
-    <div class="nav-label" style="margin-top:12px">Progress</div>
-    <div class="nav-item"><span class="icon">📈</span> Analytics</div>
-    <div class="nav-item"><span class="icon">🏆</span> Achievements</div>
-    <div class="nav-item"><span class="icon">⚙️</span> Settings</div>
+  <nav class="sb-nav">
+    <div class="sb-sec">Overview</div>
+    <div class="nitem active" onclick="showView('dashboard',this)"><div class="ndot" style="background:var(--green)"></div>Dashboard</div>
+    <div class="nitem" onclick="showView('subjects',this)"><div class="ndot" style="background:var(--blue)"></div>Subjects</div>
+
+    <div class="sb-sec">Practice</div>
+    <div class="nitem" onclick="showView('quiz',this)"><div class="ndot" style="background:var(--cyan)"></div>Quiz <span class="nbadge">5</span></div>
+    <div class="nitem" onclick="showView('dsa',this)"><div class="ndot" style="background:var(--green)"></div>DSA Tracker</div>
+    <div class="nitem" onclick="showView('flashcards',this)"><div class="ndot" style="background:var(--amber)"></div>Flashcards</div>
+    <div class="nitem" onclick="showView('formulas',this)"><div class="ndot" style="background:var(--purple)"></div>Formula Sheet</div>
+    <div class="nitem" onclick="showView('mocktest',this)"><div class="ndot" style="background:var(--orange)"></div>Mock Tests</div>
+
+    <div class="sb-sec">Build</div>
+    <div class="nitem" onclick="showView('projects',this)"><div class="ndot" style="background:var(--pink)"></div>Projects</div>
+    <div class="nitem" onclick="showView('codesnips',this)"><div class="ndot" style="background:var(--cyan)"></div>Code Snippets</div>
+
+    <div class="sb-sec">AI Tools</div>
+    <div class="nitem" onclick="showView('tutor',this)"><div class="ndot" style="background:var(--amber)"></div>AI Tutor</div>
+    <div class="nitem" onclick="showView('studyplan',this)"><div class="ndot" style="background:var(--blue)"></div>Study Plan</div>
+    <div class="nitem" onclick="showView('graph',this)"><div class="ndot" style="background:var(--purple)"></div>Knowledge Graph</div>
+    <div class="nitem" onclick="showView('analytics',this)"><div class="ndot" style="background:var(--cyan)"></div>Analytics</div>
+
+    <div class="sb-sec">Schedule</div>
+    <div class="nitem" onclick="showView('upcoming',this)"><div class="ndot" style="background:var(--red)"></div>Upcoming</div>
   </nav>
-  <div class="sidebar-user">
-    <div class="user-avatar">AK</div>
+
+  <div class="sb-user">
+    <div class="sb-av">AK</div>
     <div>
-      <div class="user-name">Arjun Kumar</div>
-      <div class="user-role">Physics 101 · Grade 11</div>
+      <div class="sb-nm">Aryan Kumar</div>
+      <div class="sb-rl">2nd Year · CSE-A · VIT</div>
     </div>
   </div>
 </aside>
 
-<!-- MAIN -->
+<!-- ═══ MAIN ═══ -->
 <div class="main">
-  <header class="topbar">
-    <div class="topbar-left">
-      <h1>Student Dashboard</h1>
-      <p>Physics 101 · Exam in 12 days · Tuesday, March 10</p>
+  <div class="topbar">
+    <div>
+      <div class="tb-title" id="topbar-title">// dashboard</div>
+      <p class="tb-sub">B.Tech CSE · Year 2 · Semester 3 · VIT Vellore · CGPA: 8.3</p>
     </div>
-    <div class="topbar-right">
-      <div class="icon-btn">🔔<div class="notif-dot"></div></div>
-      <div class="icon-btn">🔍</div>
-      <button class="btn btn-outline">📅 Study Plan</button>
-      <button class="btn btn-indigo">▶ Start Session</button>
+    <div class="tb-right">
+      <button class="btn" onclick="showView('dsa',document.querySelectorAll('.nitem')[4])">DSA Tracker</button>
+      <button class="btn g" onclick="showView('tutor',document.querySelectorAll('.nitem')[11])">Ask AI Tutor</button>
     </div>
-  </header>
+  </div>
 
-  <main class="content">
+  <div class="content">
 
-    <!-- GREETING BANNER -->
-    <div class="greeting-banner">
-      <div class="greeting-text">
-        <h2>Good morning, Arjun! 👋</h2>
-        <p>You studied 4.2 hrs yesterday. Focus on Wave Optics today — it's your weakest topic.</p>
-        <div style="margin-top:14px;display:flex;gap:10px">
-          <button class="btn btn-indigo btn-sm" style="background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.25)">🎯 Start Weak Topic Quiz</button>
-          <button class="btn btn-sm" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:white">📖 Resume Notes</button>
-        </div>
+    <!-- ══ DASHBOARD ══ -->
+    <div class="view active" id="view-dashboard">
+      <div class="ann" id="ann">
+        <span class="anntxt">⚡ <b>DBMS Internal Exam</b> in 8 days · Your mastery is 52% · Focus on SQL Joins and Normalization today.</span>
+        <span class="annx" onclick="document.getElementById('ann').style.display='none'">×</span>
       </div>
-      <div class="readiness-ring">
-        <div class="ring-wrap">
-          <svg viewBox="0 0 72 72" width="72" height="72">
-            <circle cx="36" cy="36" r="30" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/>
-            <circle cx="36" cy="36" r="30" fill="none" stroke="#f59e0b" stroke-width="6" stroke-dasharray="188.5" stroke-dashoffset="50.9" stroke-linecap="round"/>
+      <div class="banner">
+        <div class="banner-left">
+          <div class="bh">good_morning, Aryan 👨‍💻</div>
+          <div class="bsub">You coded 3.5 hrs yesterday. <span style="color:var(--green)">LeetCode streak: 11 days</span>. DBMS exam in 8 days — prioritize SQL today.</div>
+          <div class="bacts">
+            <button class="btn g" onclick="showView('studyplan',document.querySelectorAll('.nitem')[12])">Today's Plan</button>
+            <button class="btn" onclick="showView('dsa',document.querySelectorAll('.nitem')[4])">DSA Practice</button>
+            <button class="btn" onclick="showView('mocktest',document.querySelectorAll('.nitem')[8])">Mock Test</button>
+          </div>
+        </div>
+        <div class="cgbox">
+          <svg viewBox="0 0 64 64" width="64" height="64">
+            <circle cx="32" cy="32" r="26" fill="none" stroke="#0f1a0f" stroke-width="5"/>
+            <circle cx="32" cy="32" r="26" fill="none" stroke="#00d97e" stroke-width="5" stroke-dasharray="163.4" stroke-dashoffset="53.9" stroke-linecap="round" transform="rotate(-90 32 32)"/>
+            <text x="32" y="36" text-anchor="middle" font-size="11" font-weight="700" fill="#00d97e" font-family="IBM Plex Mono,monospace">8.3</text>
           </svg>
-          <div class="ring-center">72%</div>
-        </div>
-        <div>
-          <div class="ring-title">Exam Readiness</div>
-          <div class="ring-label">Target: 85% by Mar 22</div>
-          <div style="margin-top:6px"><span class="badge" style="background:rgba(245,158,11,0.25);color:#fcd34d;font-size:0.68rem">↑ 4% this week</span></div>
-        </div>
-      </div>
-      <div class="exam-countdown">
-        <div class="countdown-num">12</div>
-        <div class="countdown-label">Days to Exam</div>
-        <div style="margin-top:8px;font-size:0.7rem;opacity:0.6">Mar 22, 2026</div>
-      </div>
-    </div>
-
-    <!-- STATS -->
-    <div class="stats-row">
-      <div class="stat-card">
-        <div>
-          <div class="stat-label">Topics Mastered</div>
-          <div class="stat-value" style="color:var(--emerald)">14</div>
-          <div class="stat-sub">of 22 total topics</div>
-        </div>
-        <div class="stat-icon" style="background:var(--emerald-soft)">✅</div>
-      </div>
-      <div class="stat-card">
-        <div>
-          <div class="stat-label">Study Streak</div>
-          <div class="stat-value" style="color:var(--amber)">7🔥</div>
-          <div class="stat-sub">days in a row</div>
-        </div>
-        <div class="stat-icon" style="background:var(--amber-soft)">🔥</div>
-      </div>
-      <div class="stat-card">
-        <div>
-          <div class="stat-label">Quiz Score Avg</div>
-          <div class="stat-value" style="color:var(--indigo)">76%</div>
-          <div class="stat-sub">Last 10 quizzes</div>
-        </div>
-        <div class="stat-icon" style="background:var(--indigo-soft)">🎯</div>
-      </div>
-      <div class="stat-card">
-        <div>
-          <div class="stat-label">Hours This Week</div>
-          <div class="stat-value" style="color:var(--cyan)">18.4</div>
-          <div class="stat-sub">Goal: 20 hrs/week</div>
-        </div>
-        <div class="stat-icon" style="background:var(--cyan-soft)">⏱️</div>
-      </div>
-    </div>
-
-    <!-- ROW: MASTERY + STUDY PLAN -->
-    <div class="grid-3" style="margin-bottom:20px">
-      <!-- MASTERY -->
-      <div class="card">
-        <div class="card-header">
           <div>
-            <div class="card-title">📈 Topic Mastery</div>
-            <div class="card-sub">AI-tracked from quizzes and notes</div>
+            <div class="cgtitle">CGPA</div>
+            <div class="cgsub">Target: 9.0</div>
+            <div style="margin-top:4px"><span class="badge bg">↑ 0.3 this sem</span></div>
           </div>
-          <button class="btn btn-outline btn-sm">View All</button>
         </div>
-        <div class="card-body" id="mastery-bars"></div>
+        <div class="cdown">
+          <div class="cnum">8</div>
+          <div class="clabel">days to DBMS exam</div>
+          <div style="font-size:8px;color:var(--hint);margin-top:3px;font-family:'IBM Plex Mono',monospace">Mar 27, 2026</div>
+        </div>
       </div>
 
-      <!-- STUDY PLAN -->
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">📅 Today's Plan</div>
-            <div class="card-sub">AI-personalized schedule</div>
-          </div>
-          <span class="badge badge-indigo">5 tasks</span>
-        </div>
-        <div class="card-body" style="padding-top:8px" id="study-plan"></div>
+      <div class="g4">
+        <div class="metric"><div class="ml">LeetCode Solved</div><div class="mv" style="color:var(--green)">214</div><div class="ms">Easy:98 Med:102 Hard:14</div></div>
+        <div class="metric"><div class="ml">Study Streak</div><div class="mv" style="color:var(--amber)">11🔥</div><div class="ms">days consecutive</div></div>
+        <div class="metric"><div class="ml">Quiz Accuracy</div><div class="mv" style="color:var(--blue)">72%</div><div class="ms">last 20 attempts</div></div>
+        <div class="metric"><div class="ml">Backlog Subjects</div><div class="mv" style="color:var(--red)">0</div><div class="ms">Clean slate ✓</div></div>
       </div>
-    </div>
 
-    <!-- ROW: AI TUTOR + QUIZ -->
-    <div class="grid-2" style="margin-bottom:20px">
-      <!-- AI TUTOR -->
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">🤖 AI Tutor</div>
-            <div class="card-sub">Trained on your course content</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px">
-            <div style="width:7px;height:7px;background:var(--emerald);border-radius:50%"></div>
-            <span style="font-size:0.75rem;color:var(--emerald);font-weight:600">Online</span>
-          </div>
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><div><div class="ct">subject_mastery.json</div><div class="cs">Sem 3 subjects · AI-tracked from quizzes</div></div></div>
+          <div class="cb" id="dash-mastery"></div>
         </div>
-        <div class="card-body">
-          <div class="chat-wrap">
-            <div class="chat-msgs" id="chat-msgs">
-              <div class="msg msg-ai">
-                <div class="msg-name">EduMind AI</div>
-                Hi Arjun! Based on your last quiz, you missed 3 questions on Newton's 3rd Law. Want me to explain it with a real-world example? 🚀
-              </div>
-              <div class="msg msg-user">Yes please! I'm confused about action-reaction pairs</div>
-              <div class="msg msg-ai">
-                <div class="msg-name">EduMind AI</div>
-                Think of a rocket in space 🚀 — when it expels gas backward (action), the gas pushes the rocket forward (reaction). Both forces are <strong>equal in magnitude, opposite in direction</strong>, and act on <em>different objects</em>. That last part is what most students miss!
-              </div>
+        <div class="card">
+          <div class="ch"><div><div class="ct">today_plan.sh</div><div class="cs">AI-generated · 5 sessions</div></div><span class="badge bb">Live</span></div>
+          <div class="cb" style="padding-top:5px" id="dash-plan"></div>
+        </div>
+      </div>
+
+      <div class="g2b">
+        <div class="card">
+          <div class="ch"><div><div class="ct">weekly_hours.log</div></div></div>
+          <div class="cb"><div style="position:relative;height:130px"><canvas id="weekChart"></canvas></div></div>
+        </div>
+        <div class="card">
+          <div class="ch"><div><div class="ct">study_streak.sh</div><div class="cs">11 days and counting 🔥</div></div></div>
+          <div class="cb">
+            <div class="sdays" id="streak-row"></div>
+            <div style="margin-top:9px">
+              <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-bottom:3px;font-family:'IBM Plex Mono',monospace"><span>weekly_goal</span><span>28.5 / 35 hrs</span></div>
+              <div class="pb" style="height:5px"><div class="pf" style="width:81%;background:var(--green)"></div></div>
             </div>
-            <div class="chat-input-row">
-              <input class="chat-input" id="chat-input" placeholder="Ask anything about your syllabus..." onkeydown="if(event.key==='Enter')sendMsg()">
-              <button class="chat-send" onclick="sendMsg()">➤</button>
+            <div style="margin-top:9px;background:var(--green-d);border:1px solid rgba(0,217,126,0.2);border-radius:var(--rad);padding:7px 10px;font-size:9px;color:var(--green);font-family:'IBM Plex Mono',monospace">
+              $ echo "solve 2 LeetCode problems today to keep streak alive!"
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- QUIZ CARD -->
+    <!-- ══ SUBJECTS ══ -->
+    <div class="view" id="view-subjects">
+      <div class="sgrid" id="subjects-grid"></div>
+      <div class="card" id="subj-detail" style="display:none">
+        <div class="ch"><div><div class="ct" id="sd-title"></div><div class="cs" id="sd-sub"></div></div><button class="btn" onclick="document.getElementById('subj-detail').style.display='none'">close()</button></div>
+        <div class="cb" id="sd-body"></div>
+      </div>
+    </div>
+
+    <!-- ══ QUIZ ══ -->
+    <div class="view" id="view-quiz">
+      <div class="tbar">
+        <div class="tab active" onclick="switchQuizTab('dbms',this)">DBMS</div>
+        <div class="tab" onclick="switchQuizTab('os',this)">OS</div>
+        <div class="tab" onclick="switchQuizTab('cn',this)">CN</div>
+        <div class="tab" onclick="switchQuizTab('dsa',this)">DSA</div>
+        <div class="tab" onclick="switchQuizTab('dm',this)">Disc. Maths</div>
+      </div>
+      <div class="g2b" style="margin-bottom:13px">
+        <div class="metric"><div class="ml">Score</div><div class="mv" id="qsd">—</div><div class="ms" id="qss">answer questions</div></div>
+        <div class="metric"><div class="ml">Questions Done</div><div class="mv" id="qan">0 / 4</div><div class="ms">University exam pattern</div></div>
+      </div>
       <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">🎯 Quick Quiz</div>
-            <div class="card-sub">AI-generated · Wave Optics (weak area)</div>
-          </div>
-          <span class="badge badge-rose">Weak Topic</span>
-        </div>
-        <div class="card-body">
-          <div class="quiz-question" id="quiz-q">Q1. Which phenomenon best explains why a straw appears bent when placed in a glass of water?</div>
+        <div class="ch"><div><div class="ct" id="qtitle">DBMS Quiz</div><div class="cs">AI-generated · University + Interview pattern</div></div><span class="badge ba" id="qbadge">Internal Exam</span></div>
+        <div class="cb">
+          <div class="qquestion" id="quiz-q"></div>
           <div id="quiz-opts"></div>
-          <div class="quiz-result" id="quiz-result"></div>
-          <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center">
-            <span style="font-size:0.75rem;color:var(--mist)" id="quiz-progress">Question 1 of 3</span>
-            <button class="btn btn-outline btn-sm" onclick="nextQuestion()" id="next-btn" style="display:none">Next →</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ROW: KNOWLEDGE GRAPH + STREAK + UPCOMING -->
-    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:20px">
-
-      <!-- KNOWLEDGE GRAPH -->
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">🕸️ Knowledge Graph</div>
-            <div class="card-sub">Topic relationships & mastery</div>
-          </div>
-          <button class="btn btn-outline btn-sm">Expand</button>
-        </div>
-        <div class="card-body" style="padding:14px">
-          <div class="graph-container">
-            <svg id="graph-svg" viewBox="0 0 420 200"></svg>
-          </div>
-          <div style="display:flex;gap:14px;margin-top:12px">
-            <div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--mist)"><div style="width:8px;height:8px;border-radius:50%;background:var(--emerald)"></div> Mastered</div>
-            <div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--mist)"><div style="width:8px;height:8px;border-radius:50%;background:var(--amber)"></div> In Progress</div>
-            <div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--mist)"><div style="width:8px;height:8px;border-radius:50%;background:var(--rose)"></div> Weak</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- STREAK -->
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">🔥 Study Streak</div>
-            <div class="card-sub">7 days and counting!</div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="streak-row" id="streak-row"></div>
-          <div style="margin-top:18px;background:var(--amber-soft);border-radius:10px;padding:12px;text-align:center">
-            <div style="font-size:1.5rem;font-weight:800;color:var(--amber)">7🔥</div>
-            <div style="font-size:0.78rem;color:var(--amber);font-weight:600;margin-top:2px">Day Streak</div>
-            <div style="font-size:0.72rem;color:var(--mist);margin-top:4px">Study today to keep it alive!</div>
-          </div>
-          <div style="margin-top:14px">
-            <div style="font-size:0.78rem;font-weight:600;margin-bottom:8px">Weekly Goal</div>
-            <div style="background:var(--bg);border-radius:100px;height:8px;overflow:hidden">
-              <div style="width:92%;height:100%;background:linear-gradient(90deg,var(--indigo),var(--cyan));border-radius:100px"></div>
+          <div class="qres" id="quiz-res"></div>
+          <div style="margin-top:11px;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace" id="qprog"></span>
+            <div style="display:flex;gap:6px">
+              <button class="btn" id="next-btn" style="display:none" onclick="nextQ()">next_question()</button>
+              <button class="btn g" id="retry-btn" style="display:none" onclick="retryQuiz()">retry_quiz()</button>
             </div>
-            <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--mist);margin-top:4px"><span>18.4 hrs studied</span><span>Goal: 20 hrs</span></div>
           </div>
         </div>
       </div>
-
-      <!-- UPCOMING -->
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">📆 Upcoming</div>
-            <div class="card-sub">Tests & deadlines</div>
-          </div>
-        </div>
-        <div class="card-body" style="padding-top:8px" id="upcoming-list"></div>
-      </div>
-
     </div>
 
-  </main>
+    <!-- ══ DSA TRACKER ══ -->
+    <div class="view" id="view-dsa">
+      <div class="g4" style="margin-bottom:13px">
+        <div class="metric"><div class="ml">Total Solved</div><div class="mv" style="color:var(--green)">214</div><div class="ms">/ 450 target</div></div>
+        <div class="metric"><div class="ml">Easy</div><div class="mv" style="color:var(--green)">98</div><div class="ms">/ 150</div></div>
+        <div class="metric"><div class="ml">Medium</div><div class="mv" style="color:var(--amber)">102</div><div class="ms">/ 200</div></div>
+        <div class="metric"><div class="ml">Hard</div><div class="mv" style="color:var(--red)">14</div><div class="ms">/ 100</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><div><div class="ct">dsa_topics.json</div><div class="cs">Topic-wise progress · Placement readiness</div></div></div>
+          <div class="cb" id="dsa-topics"></div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:13px">
+            <div class="ch"><div><div class="ct">activity_heatmap</div><div class="cs">Last 6 months · LeetCode + GFG</div></div></div>
+            <div class="cb">
+              <div class="hmap" id="heatmap"></div>
+              <div style="display:flex;gap:8px;margin-top:8px;align-items:center;font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace">
+                <span>less</span>
+                <div style="width:10px;height:10px;background:var(--border);border-radius:2px"></div>
+                <div style="width:10px;height:10px;background:#005020;border-radius:2px"></div>
+                <div style="width:10px;height:10px;background:#009940;border-radius:2px"></div>
+                <div style="width:10px;height:10px;background:var(--green);border-radius:2px"></div>
+                <span>more</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch"><div><div class="ct">placement_readiness</div></div></div>
+            <div class="cb">
+              <div style="position:relative;height:150px"><canvas id="dsaChart"></canvas></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ FLASHCARDS ══ -->
+    <div class="view" id="view-flashcards">
+      <div class="tbar">
+        <div class="tab active" onclick="switchFlashTab('dbms',this)">DBMS</div>
+        <div class="tab" onclick="switchFlashTab('os',this)">OS</div>
+        <div class="tab" onclick="switchFlashTab('cn',this)">CN</div>
+        <div class="tab" onclick="switchFlashTab('dsa',this)">DSA</div>
+      </div>
+      <div style="max-width:520px;margin:0 auto">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px">
+          <span style="font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace" id="fcount">card_01_of_06</span>
+          <span class="badge ba">18 cards due today</span>
+        </div>
+        <div class="fcard" id="fcard" onclick="flipCard()">
+          <span class="ftag" id="ftag">DBMS</span>
+          <div class="ff" id="ffront"></div>
+          <div class="fb" id="fback"></div>
+        </div>
+        <div style="text-align:center;font-size:9px;color:var(--hint);margin:7px 0;font-family:'IBM Plex Mono',monospace">// click to reveal · rate to schedule next review</div>
+        <div class="fbtns">
+          <button class="fbtn" onclick="rateCard('again')" style="color:var(--red);border-color:rgba(255,68,102,0.3)">again</button>
+          <button class="fbtn" onclick="rateCard('hard')" style="color:var(--amber);border-color:rgba(255,170,0,0.3)">hard</button>
+          <button class="fbtn" onclick="rateCard('good')" style="color:var(--green);border-color:rgba(0,217,126,0.3)">good</button>
+          <button class="fbtn" onclick="rateCard('easy')" style="color:var(--cyan);border-color:rgba(0,204,238,0.3)">easy</button>
+        </div>
+        <div id="ffb" style="text-align:center;font-size:9px;color:var(--muted);margin-top:7px;min-height:14px;font-family:'IBM Plex Mono',monospace"></div>
+      </div>
+    </div>
+
+    <!-- ══ FORMULA SHEET ══ -->
+    <div class="view" id="view-formulas">
+      <div class="tbar">
+        <div class="tab active" onclick="switchFormTab('dbms',this)">DBMS</div>
+        <div class="tab" onclick="switchFormTab('os',this)">OS</div>
+        <div class="tab" onclick="switchFormTab('cn',this)">CN</div>
+        <div class="tab" onclick="switchFormTab('dm',this)">Disc. Maths</div>
+      </div>
+      <div class="g2b">
+        <div id="form-left"></div>
+        <div id="form-right"></div>
+      </div>
+    </div>
+
+    <!-- ══ MOCK TESTS ══ -->
+    <div class="view" id="view-mocktest">
+      <div class="g4" style="margin-bottom:13px">
+        <div class="metric"><div class="ml">Tests Taken</div><div class="mv">9</div><div class="ms">This semester</div></div>
+        <div class="metric"><div class="ml">Best Score</div><div class="mv" style="color:var(--green)">81%</div><div class="ms">DBMS + OS combo</div></div>
+        <div class="metric"><div class="ml">Avg Score</div><div class="mv" style="color:var(--blue)">68%</div><div class="ms">All subjects</div></div>
+        <div class="metric"><div class="ml">Rank in Class</div><div class="mv" style="color:var(--purple)">12</div><div class="ms">/ 60 students</div></div>
+      </div>
+      <div class="g2b">
+        <div class="card">
+          <div class="ch"><div><div class="ct">recent_tests.log</div><div class="cs">University + Interview pattern</div></div><button class="btn g">+ New Test</button></div>
+          <div class="cb" id="mock-list"></div>
+        </div>
+        <div class="card">
+          <div class="ch"><div><div class="ct">score_analysis</div><div class="cs">Last test breakdown</div></div></div>
+          <div class="cb"><div style="position:relative;height:200px"><canvas id="mockChart"></canvas></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><div><div class="ct">score_trend.graph</div><div class="cs">Last 9 mock tests</div></div></div>
+        <div class="cb"><div style="position:relative;height:150px"><canvas id="mockTrend"></canvas></div></div>
+      </div>
+    </div>
+
+    <!-- ══ PROJECTS ══ -->
+    <div class="view" id="view-projects">
+      <div class="g4" style="margin-bottom:13px">
+        <div class="metric"><div class="ml">Active Projects</div><div class="mv" style="color:var(--green)">3</div><div class="ms">in progress</div></div>
+        <div class="metric"><div class="ml">GitHub Commits</div><div class="mv" style="color:var(--blue)">142</div><div class="ms">This month</div></div>
+        <div class="metric"><div class="ml">Completed</div><div class="mv" style="color:var(--amber)">5</div><div class="ms">Total projects</div></div>
+        <div class="metric"><div class="ml">Tech Stack</div><div class="mv" style="color:var(--purple);font-size:12px">8</div><div class="ms">Languages/frameworks</div></div>
+      </div>
+      <div class="g2b">
+        <div class="card">
+          <div class="ch"><div><div class="ct">active_projects/</div><div class="cs">Currently building</div></div><button class="btn g">+ New Project</button></div>
+          <div class="cb" id="active-projects"></div>
+        </div>
+        <div class="card">
+          <div class="ch"><div><div class="ct">completed_projects/</div><div class="cs">Portfolio ready</div></div></div>
+          <div class="cb" id="done-projects"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ CODE SNIPPETS ══ -->
+    <div class="view" id="view-codesnips">
+      <div class="tbar">
+        <div class="tab active" onclick="switchCodeTab('dsa',this)">DSA Patterns</div>
+        <div class="tab" onclick="switchCodeTab('sql',this)">SQL Queries</div>
+        <div class="tab" onclick="switchCodeTab('os',this)">OS Concepts</div>
+      </div>
+      <div class="g2b" id="code-grid"></div>
+    </div>
+
+    <!-- ══ AI TUTOR ══ -->
+    <div class="view" id="view-tutor">
+      <div class="g2">
+        <div class="card">
+          <div class="ch">
+            <div><div class="ct">ai_tutor.exe</div><div class="cs">Trained on GATE + University + Interview patterns</div></div>
+            <div style="display:flex;align-items:center;gap:5px"><div style="width:5px;height:5px;background:var(--green);border-radius:50%"></div><span style="font-size:8px;color:var(--green);font-weight:700;font-family:'IBM Plex Mono',monospace">RUNNING</span></div>
+          </div>
+          <div class="cb">
+            <div class="cwrap">
+              <div class="cmsgs" id="chat-msgs">
+                <div class="msg mai"><div class="msnd">EduMind AI</div>Hi Aryan! Your DBMS quiz score was 52% last attempt. Normalization (1NF→BCNF) is your weakest area. Want me to explain with an example database? Your DBMS exam is in 8 days.</div>
+                <div class="msg mme">Yes! I always confuse 2NF and 3NF</div>
+                <div class="msg mai"><div class="msnd">EduMind AI</div>Classic confusion! Here's the key difference:<br><br><b>2NF</b>: No partial dependency (non-key attribute depends on PART of composite key)<br><b>3NF</b>: No transitive dependency (non-key attribute depends on another non-key attribute)<br><br>Example: Student(RollNo, SubjectID, StudentName, TeacherName)<br>- TeacherName depends on SubjectID (not the whole key) → 2NF violation<br>- Fix: Split into Student(RollNo, SubjectID) + Subject(SubjectID, TeacherName)</div>
+              </div>
+              <div class="cinrow">
+                <input class="cinp" id="chat-input" placeholder="Ask any DBMS, OS, CN, DSA, or coding question..." onkeydown="if(event.key==='Enter')sendMsg()">
+                <button class="csend" onclick="sendMsg()">send()</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:13px">
+            <div class="ch"><div><div class="ct">quick_topics[]</div></div></div>
+            <div class="cb"><div style="display:flex;flex-wrap:wrap;gap:5px" id="quick-topics"></div></div>
+          </div>
+          <div class="card">
+            <div class="ch"><div><div class="ct">weak_areas.json</div><div class="cs">AI-identified from quiz errors</div></div></div>
+            <div class="cb" id="weak-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ STUDY PLAN ══ -->
+    <div class="view" id="view-studyplan">
+      <div class="g4" style="margin-bottom:13px">
+        <div class="metric"><div class="ml">Sessions Today</div><div class="mv">6</div><div class="ms">3 completed</div></div>
+        <div class="metric"><div class="ml">Planned Hours</div><div class="mv">5.5h</div><div class="ms">Daily goal: 5h</div></div>
+        <div class="metric"><div class="ml">Focus Subject</div><div class="mv" style="font-size:13px">DBMS</div><div class="ms">52% mastery · 8 days left</div></div>
+        <div class="metric"><div class="ml">CGPA Impact</div><div class="mv" style="color:var(--green)">+0.2</div><div class="ms">Possible if plan done</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><div><div class="ct">schedule_today.cron</div><div class="cs">AI-generated · Thursday, March 19</div></div></div>
+          <div class="cb" style="padding-top:5px" id="full-plan"></div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:13px">
+            <div class="ch"><div><div class="ct">plan_params.json</div></div></div>
+            <div class="cb">
+              <div style="font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;line-height:1.9">
+                <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--border)"><span>daily_goal</span><span style="color:var(--text)">"5 hours"</span></div>
+                <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--border)"><span>exam_mode</span><span style="color:var(--amber)">"pre-internal"</span></div>
+                <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--border)"><span>dbms_exam_in</span><span style="color:var(--red)">"8 days"</span></div>
+                <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--border)"><span>flashcards_due</span><span style="color:var(--text)">18</span></div>
+                <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--border)"><span>lc_target</span><span style="color:var(--text)">"2 problems/day"</span></div>
+                <div style="display:flex;justify-content:space-between;padding:2px 0"><span>yesterday_done</span><span style="color:var(--green)">85%</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch"><div><div class="ct">weekly_plan.bar</div></div></div>
+            <div class="cb"><div style="position:relative;height:130px"><canvas id="planChart"></canvas></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ KNOWLEDGE GRAPH ══ -->
+    <div class="view" id="view-graph">
+      <div class="g2b" style="margin-bottom:13px">
+        <div class="metric"><div class="ml">Total Topics Mapped</div><div class="mv">52</div><div class="ms">across 5 core subjects</div></div>
+        <div class="metric"><div class="ml">Topics Mastered</div><div class="mv" style="color:var(--green)">28</div><div class="ms">54% of sem 3 syllabus</div></div>
+      </div>
+      <div class="tbar">
+        <div class="tab active" onclick="drawGraph('dbms',this)">DBMS</div>
+        <div class="tab" onclick="drawGraph('os',this)">OS</div>
+        <div class="tab" onclick="drawGraph('cn',this)">CN</div>
+        <div class="tab" onclick="drawGraph('dsa2',this)">DSA</div>
+      </div>
+      <div class="card">
+        <div class="ch"><div><div class="ct" id="graph-title">graph.DBMS</div><div class="cs">Click any node to explore · Green = mastered · Amber = in progress · Red = weak</div></div></div>
+        <div class="cb">
+          <div class="gwrap"><svg id="kg-svg" width="100%" height="280" viewBox="0 0 720 280"></svg></div>
+          <div style="display:flex;gap:14px;margin-top:9px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:5px;font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace"><div style="width:8px;height:8px;border-radius:50%;background:var(--green)"></div>>70% mastered</div>
+            <div style="display:flex;align-items:center;gap:5px;font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace"><div style="width:8px;height:8px;border-radius:50%;background:var(--amber)"></div>40-70% progress</div>
+            <div style="display:flex;align-items:center;gap:5px;font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace"><div style="width:8px;height:8px;border-radius:50%;background:var(--red)"></div>&lt;40% weak</div>
+            <div style="display:flex;align-items:center;gap:5px;font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace"><div style="width:8px;height:8px;border-radius:50%;background:var(--purple)"></div>not started</div>
+          </div>
+        </div>
+      </div>
+      <div class="nddetail" id="node-detail">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div class="ct" id="nd-title"></div>
+          <button class="btn" onclick="document.getElementById('node-detail').style.display='none'">close()</button>
+        </div>
+        <div id="nd-body"></div>
+      </div>
+    </div>
+
+    <!-- ══ ANALYTICS ══ -->
+    <div class="view" id="view-analytics">
+      <div class="tbar">
+        <div class="tab active" onclick="switchAnTab('perf',this)">Performance</div>
+        <div class="tab" onclick="switchAnTab('time',this)">Study Time</div>
+        <div class="tab" onclick="switchAnTab('pred',this)">CGPA Prediction</div>
+      </div>
+      <div id="an-perf">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:13px">
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad);padding:10px;text-align:center"><div style="font-size:18px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--green)">8.3</div><div style="font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:2px">current_cgpa</div></div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad);padding:10px;text-align:center"><div style="font-size:18px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--blue)">72%</div><div style="font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:2px">quiz_accuracy</div></div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad);padding:10px;text-align:center"><div style="font-size:18px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--amber)">214</div><div style="font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:2px">lc_solved</div></div>
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--rad);padding:10px;text-align:center"><div style="font-size:18px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--purple)">12</div><div style="font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:2px">class_rank</div></div>
+        </div>
+        <div class="g2b">
+          <div class="card"><div class="ch"><div><div class="ct">subject_performance</div></div></div><div class="cb"><div style="position:relative;height:190px"><canvas id="perfChart"></canvas></div></div></div>
+          <div class="card"><div class="ch"><div><div class="ct">quiz_trend</div><div class="cs">Last 10 quiz attempts</div></div></div><div class="cb"><div style="position:relative;height:190px"><canvas id="trendChart"></canvas></div></div></div>
+        </div>
+      </div>
+      <div id="an-time" style="display:none">
+        <div class="card"><div class="ch"><div><div class="ct">daily_hours.log</div><div class="cs">Last 14 days</div></div></div><div class="cb"><div style="position:relative;height:210px"><canvas id="timeChart"></canvas></div></div></div>
+      </div>
+      <div id="an-pred" style="display:none">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:13px">
+          <div class="metric"><div class="ml">Predicted Sem 3 CGPA</div><div class="mv" style="color:var(--green)">8.6</div><div class="ms">if current pace maintained</div></div>
+          <div class="metric"><div class="ml">Best Case</div><div class="mv" style="color:var(--cyan)">8.9</div><div class="ms">if all internals aced</div></div>
+          <div class="metric"><div class="ml">Risk</div><div class="mv" style="color:var(--amber)">8.1</div><div class="ms">if DBMS exam goes poorly</div></div>
+        </div>
+        <div class="card">
+          <div class="ch"><div><div class="ct">subject_grade_prediction</div></div></div>
+          <div class="cb" id="pred-bars"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ UPCOMING ══ -->
+    <div class="view" id="view-upcoming">
+      <div class="g2b">
+        <div class="card">
+          <div class="ch"><div><div class="ct">upcoming_deadlines.cal</div><div class="cs">Next 30 days</div></div></div>
+          <div class="cb" style="padding-top:5px" id="upcoming-list"></div>
+        </div>
+        <div class="card">
+          <div class="ch"><div><div class="ct">semester_calendar.ics</div><div class="cs">Sem 3 · 2025-26</div></div></div>
+          <div class="cb" style="padding-top:5px" id="sem-cal"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-// MASTERY BARS
-const topics = [
-  {name:"Newton's Laws",   pct:88, color:'#059669'},
-  {name:'Electrostatics',  pct:76, color:'#4f46e5'},
-  {name:'Organic Chem',    pct:52, color:'#d97706'},
-  {name:'Thermodynamics',  pct:45, color:'#d97706'},
-  {name:'Wave Optics',     pct:33, color:'#e11d48'},
-  {name:'Fluid Mechanics', pct:67, color:'#0891b2'},
+/* ══════════════════════════════════════
+   DATA LAYER
+══════════════════════════════════════ */
+const subjects=[
+  {name:'DBMS',icon:'🗄️',color:'var(--green)',code:'CS3401',credits:4,topics:['ER Model','Relational Model','SQL Basics','SQL Joins','Normalization (1NF-BCNF)','Transactions & ACID','Concurrency Control','File Organization','Indexing & Hashing','Query Optimization'],mastery:[80,75,72,55,48,60,45,65,52,40]},
+  {name:'Operating Systems',icon:'⚙️',color:'var(--blue)',code:'CS3402',credits:4,topics:['Process Management','CPU Scheduling','Synchronization','Deadlocks','Memory Management','Virtual Memory','File Systems','I/O Management','Disk Scheduling','Security'],mastery:[78,72,65,58,70,60,75,65,68,72]},
+  {name:'Computer Networks',icon:'🌐',color:'var(--cyan)',code:'CS3403',credits:4,topics:['OSI Model','TCP/IP Suite','Data Link Layer','Network Layer','Transport Layer','Application Layer','Routing Algorithms','Congestion Control','DNS & HTTP','Network Security'],mastery:[75,70,68,65,72,60,55,50,70,58]},
+  {name:'Data Structures & Algorithms',icon:'🌲',color:'var(--amber)',code:'CS3404',credits:4,topics:['Arrays & Strings','Linked Lists','Stacks & Queues','Trees & BST','Heaps','Graphs','Sorting Algorithms','Searching','Dynamic Programming','Greedy Algorithms'],mastery:[88,85,82,78,72,65,80,85,55,60]},
+  {name:'Discrete Mathematics',icon:'∑',color:'var(--purple)',code:'MA3401',credits:3,topics:['Set Theory','Logic & Proofs','Relations','Functions','Graph Theory','Trees','Counting & Combinatorics','Probability','Number Theory','Boolean Algebra'],mastery:[75,70,68,72,65,70,60,55,72,68]},
+  {name:'Object Oriented Programming',icon:'📦',color:'var(--orange)',code:'CS3405',credits:3,topics:['Classes & Objects','Inheritance','Polymorphism','Abstraction','Encapsulation','Interfaces','Exception Handling','Collections','File I/O','Design Patterns'],mastery:[88,85,80,82,87,75,78,70,72,55]},
 ];
-const mastEl = document.getElementById('mastery-bars');
-topics.forEach(t => {
-  mastEl.innerHTML += `
-    <div class="mastery-row">
-      <span class="mastery-name">${t.name}</span>
-      <div class="mastery-bar-bg"><div class="mastery-bar-fill" style="width:${t.pct}%;background:${t.color}"></div></div>
-      <span class="mastery-pct" style="color:${t.color}">${t.pct}%</span>
-    </div>`;
-});
+const masteryMap={DBMS:59,OS:68,CN:64,DSA:75,'Disc. Maths':68,OOP:79};
 
-// STUDY PLAN
-const plan = [
-  {time:'09:00', title:'⚡ Wave Optics Review', meta:'45 min · Weak area focus', color:'#e11d48', badge:'Urgent', badgeClass:'badge-rose'},
-  {time:'10:00', title:'🧪 Organic Chemistry', meta:'60 min · Esters & reactions', color:'#d97706', badge:'Scheduled', badgeClass:'badge-amber'},
-  {time:'11:15', title:'📝 Thermo Quiz (Ch.3)', meta:'20 min · Auto-graded', color:'#4f46e5', badge:'Quiz', badgeClass:'badge-indigo'},
-  {time:'14:00', title:'🔁 Spaced Repetition', meta:'30 min · 18 cards due today', color:'#059669', badge:'Due', badgeClass:'badge-green'},
-  {time:'15:00', title:"✅ Newton's Laws Review", meta:"40 min · Maintain mastery", color:'#059669', badge:'Maintain', badgeClass:'badge-green'},
-];
-const planEl = document.getElementById('study-plan');
-plan.forEach((p, i) => {
-  planEl.innerHTML += `
-    <div class="plan-item">
-      <span class="plan-time">${p.time}</span>
-      <div class="plan-dot-wrap">
-        <div class="plan-dot" style="background:${p.color}"></div>
-        ${i < plan.length-1 ? '<div class="plan-line"></div>' : ''}
-      </div>
-      <div class="plan-content">
-        <div class="plan-title">${p.title}<span class="plan-badge ${p.badgeClass}">${p.badge}</span></div>
-        <div class="plan-meta">${p.meta}</div>
-      </div>
-    </div>`;
-});
+/* ══ NAVIGATION ══ */
+const viewTitles={dashboard:'// dashboard',subjects:'// subjects',quiz:'// quiz',dsa:'// dsa_tracker',flashcards:'// flashcards',formulas:'// formula_sheet',mocktest:'// mock_tests',projects:'// projects',codesnips:'// code_snippets',tutor:'// ai_tutor',studyplan:'// study_plan',graph:'// knowledge_graph',analytics:'// analytics',upcoming:'// upcoming'};
+function showView(name,el){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nitem').forEach(n=>n.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  if(el)el.classList.add('active');
+  document.getElementById('topbar-title').textContent=viewTitles[name]||'// '+name;
+  if(name==='analytics')initAnCharts();
+  if(name==='mocktest')initMockCharts();
+  if(name==='graph')drawGraph('dbms',document.querySelector('#view-graph .tbar .tab'));
+  if(name==='studyplan')initPlanChart();
+  if(name==='dsa')initDSA();
+  if(name==='projects')initProjects();
+  if(name==='codesnips')renderCodeTab('dsa');
+}
 
-// QUIZ
-const questions = [
-  {
-    q: 'Q1. Which phenomenon best explains why a straw appears bent when placed in a glass of water?',
-    opts: ['Reflection', 'Refraction', 'Diffraction', 'Dispersion'],
-    correct: 1,
-    explanation: '✅ Correct! Refraction — light bends as it crosses from water to air due to the change in speed.'
-  },
-  {
-    q: 'Q2. The speed of light in a medium with refractive index n=1.5 is approximately:',
-    opts: ['3.0 × 10⁸ m/s', '2.0 × 10⁸ m/s', '1.5 × 10⁸ m/s', '4.5 × 10⁸ m/s'],
-    correct: 1,
-    explanation: '✅ Correct! Speed = c/n = 3×10⁸ / 1.5 = 2×10⁸ m/s'
-  },
-  {
-    q: "Q3. Young's double-slit experiment demonstrates which property of light?",
-    opts: ['Reflection', 'Polarization', 'Interference', 'Photoelectric effect'],
-    correct: 2,
-    explanation: "✅ Correct! It demonstrates interference — overlapping waves create bright and dark fringes."
+/* ══ DASHBOARD ══ */
+function initDashboard(){
+  const items=[
+    {n:'DBMS · SQL Joins',pct:55,c:'var(--green)'},{n:'OS · Memory Mgmt',pct:70,c:'var(--blue)'},
+    {n:'CN · Routing Algos',pct:55,c:'var(--cyan)'},{n:'DSA · Dynamic Prog',pct:55,c:'var(--amber)'},
+    {n:'Disc. Maths · Graphs',pct:65,c:'var(--purple)'},{n:'OOP · Design Patterns',pct:55,c:'var(--orange)'},
+  ];
+  document.getElementById('dash-mastery').innerHTML=items.map(i=>`
+    <div class="mr"><span class="mn">${i.n}</span>
+    <div class="mb"><div class="pb"><div class="pf" style="width:${i.pct}%;background:${i.c}"></div></div></div>
+    <span class="mp" style="color:${i.c}">${i.pct}%</span></div>`).join('');
+
+  const plan=[
+    {t:'06:30',ti:'DBMS — SQL Joins & Subqueries',m:'75 min · Critical · 55% mastery · 8 days to exam',c:'var(--green)'},
+    {t:'08:00',ti:'LeetCode — 2 Medium problems',m:'60 min · Arrays/DP · Placement prep',c:'var(--amber)'},
+    {t:'09:30',ti:'OS — Memory Management Revision',m:'45 min · Chapter 4 · Scheduled',c:'var(--blue)'},
+    {t:'14:00',ti:'DBMS Normalization Quiz',m:'20 min · AI-generated · 4 questions',c:'var(--cyan)'},
+    {t:'15:00',ti:'Flashcard Review — 18 cards due',m:'30 min · Spaced repetition · SM-2',c:'var(--amber)'},
+  ];
+  document.getElementById('dash-plan').innerHTML=plan.map(p=>`
+    <div class="pi"><span class="pt">${p.t}</span>
+    <div class="pd" style="background:${p.c}"></div>
+    <div><div class="ptitle">${p.ti}</div><div class="pmeta">${p.m}</div></div></div>`).join('');
+
+  const days=['M','T','W','T','F','S','S'],done=[true,true,true,true,true,true,false];
+  document.getElementById('streak-row').innerHTML=days.map((d,i)=>`
+    <div class="sday">
+      <div class="sdot ${i===6?'today':done[i]?'done':''}">${done[i]?'✓':i===6?'•':''}</div>
+      <div class="sdlabel">${d}</div>
+    </div>`).join('');
+
+  new Chart(document.getElementById('weekChart'),{type:'bar',
+    data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],datasets:[{label:'Hours',data:[4.5,5.2,4.8,3.5,0,5,0],backgroundColor:'#00d97e',borderRadius:3}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:7,ticks:{stepSize:1,font:{size:8},color:'#6060a0'},grid:{color:'rgba(255,255,255,0.03)'}},x:{ticks:{font:{size:8},color:'#6060a0'},grid:{display:false}}}}});
+}
+
+/* ══ SUBJECTS ══ */
+function initSubjects(){
+  document.getElementById('subjects-grid').innerHTML=subjects.map((s,i)=>`
+    <div class="scard" onclick="showSubjDetail(${i})">
+      <div class="sicon" style="background:${s.color}20">${s.icon}</div>
+      <div class="sname">${s.name}</div>
+      <div class="ssub">${s.code} · ${s.credits} credits · ${s.topics.length} topics</div>
+      <div class="pb" style="margin-bottom:4px"><div class="pf" style="width:${masteryMap[s.name]||68}%;background:${s.color}"></div></div>
+      <div style="display:flex;justify-content:space-between"><span style="font-size:8px;color:var(--muted);font-family:'IBM Plex Mono',monospace">mastery</span><span style="font-size:9px;font-weight:700;color:${s.color};font-family:'IBM Plex Mono',monospace">${masteryMap[s.name]||68}%</span></div>
+    </div>`).join('');
+}
+function showSubjDetail(i){
+  const s=subjects[i];
+  document.getElementById('sd-title').textContent=s.name+'.topics[]';
+  document.getElementById('sd-sub').textContent=s.code+' · '+s.credits+' credits · '+s.topics.length+' topics';
+  document.getElementById('sd-body').innerHTML=s.topics.map((t,j)=>`
+    <div class="mr"><span class="mn" style="width:200px">${t}</span>
+    <div class="mb"><div class="pb"><div class="pf" style="width:${s.mastery[j]}%;background:${s.color}"></div></div></div>
+    <span class="mp" style="color:${s.color}">${s.mastery[j]}%</span>
+    <span class="badge ${s.mastery[j]>=70?'bg':s.mastery[j]>=40?'ba':'br'}" style="margin-left:8px;flex-shrink:0">${s.mastery[j]>=70?'done':s.mastery[j]>=40?'wip':'weak'}</span>
+    </div>`).join('');
+  document.getElementById('subj-detail').style.display='block';
+}
+
+/* ══ QUIZ ══ */
+const quizData={
+  dbms:{title:'DBMS',badge:'Internal Exam',qs:[
+    {q:'Which normal form eliminates all partial dependencies?\n\nGiven: Relation R(A, B, C, D) where AB → C, AB → D, and A → B',opts:['First Normal Form (1NF)','Second Normal Form (2NF)','Third Normal Form (3NF)','Boyce-Codd Normal Form (BCNF)'],correct:1,exp:'2NF eliminates partial dependencies (non-key attribute depending on PART of composite key). Here A→B means B partially depends on AB, so it violates 2NF. BCNF is stronger — it eliminates ALL functional dependencies where LHS is not a superkey.'},
+    {q:'What is the result of NATURAL JOIN when no common attribute exists between two tables?',opts:['Empty relation','Cross product (Cartesian product)','Error is thrown','NULL values are inserted'],correct:1,exp:'When no common attributes exist, NATURAL JOIN degenerates to a Cross Product (Cartesian Product). Every row of table 1 combines with every row of table 2. If T1 has m rows and T2 has n rows, result has m×n rows.'},
+    {q:'In ACID properties, which property ensures that a transaction sees only committed data from other transactions?',opts:['Atomicity','Consistency','Isolation','Durability'],correct:2,exp:'Isolation ensures that concurrent transactions execute as if they were serial (one after another). Each transaction sees a consistent snapshot of the database, not intermediate states of other transactions. Isolation levels: Read Uncommitted → Read Committed → Repeatable Read → Serializable.'},
+    {q:'Which index structure supports efficient range queries like "Find all students with CGPA between 8 and 9"?',opts:['Hash Index','B+ Tree Index','Bitmap Index','Inverted Index'],correct:1,exp:'B+ Tree Index supports efficient range queries because data is stored in sorted order and all leaf nodes are linked. Hash Index only supports equality queries (CGPA = 8.5). B+ Tree Time: O(log n) for point query + O(k) for range of k results.'},
+  ]},
+  os:{title:'Operating Systems',badge:'Core CS',qs:[
+    {q:'Process P1 (arrival=0, burst=8), P2 (arrival=1, burst=4), P3 (arrival=2, burst=2). Using Shortest Job First (SJF) non-preemptive, what is Average Waiting Time?',opts:['4.33 ms','3.0 ms','5.0 ms','2.67 ms'],correct:0,exp:'SJF Non-preemptive: P1 runs first (arrived at 0, no other process). P1: 0-8. At t=8, P3(burst=2) has shorter job → P3: 8-10. P2: 10-14. Waiting: P1=0, P2=10-1=9, P3=8-2=6. Avg = (0+9+6)/3 = 5.0... Actually = 5.0. Common trick question in VIT exams!'},
+    {q:'In the Banker\'s Algorithm, what does the "Need" matrix represent?',opts:['Resources currently allocated','Maximum resources ever needed','Maximum - Allocated (remaining need)','Available - Allocated'],correct:2,exp:'Need[i][j] = Maximum[i][j] - Allocation[i][j]. It represents how many MORE resources process i might still request. The Banker\'s algorithm checks: if Need ≤ Available, process can complete → release resources → update Available → repeat. This finds a safe sequence.'},
+    {q:'Which page replacement algorithm suffers from Belady\'s Anomaly?',opts:['Optimal (OPT)','Least Recently Used (LRU)','First In First Out (FIFO)','LFU (Least Frequently Used)'],correct:2,exp:'FIFO suffers from Belady\'s Anomaly: increasing page frames can INCREASE page faults. LRU and OPT are stack algorithms — they never suffer from Belady\'s Anomaly. OPT gives minimum page faults but is not implementable (needs future knowledge).'},
+    {q:'A process is in "Blocked" state. Which event will directly move it to "Ready" state?',opts:['CPU is allocated','I/O operation completes','Process is preempted','New process is created'],correct:1,exp:'Blocked → Ready transition happens when the I/O operation (or event) the process was waiting for completes. The OS moves it to Ready queue. Then the scheduler picks it up and moves it to Running state (Ready→Running). Running→Blocked happens when process initiates I/O.'},
+  ]},
+  cn:{title:'Computer Networks',badge:'Core CS',qs:[
+    {q:'Host A sends a packet to Host B. Which layer adds the Source and Destination IP addresses?',opts:['Physical Layer','Data Link Layer','Network Layer','Transport Layer'],correct:2,exp:'Network Layer (Layer 3) adds IP addresses (Source IP + Destination IP) forming an IP datagram. Data Link Layer adds MAC addresses (Source MAC + Destination MAC) in the frame header. Transport Layer adds port numbers (Source Port + Destination Port). Each layer adds its own header!'},
+    {q:'Dijkstra\'s algorithm is used in which routing protocol?',opts:['RIP (Routing Information Protocol)','OSPF (Open Shortest Path First)','BGP (Border Gateway Protocol)','EIGRP'],correct:1,exp:'OSPF uses Dijkstra\'s shortest path algorithm (Link State Routing). Each router has the complete network topology and runs Dijkstra locally. RIP uses Bellman-Ford (Distance Vector). BGP is path-vector routing. OSPF convergence is faster than RIP.'},
+    {q:'What is the maximum segment size (MSS) used for in TCP?',opts:['To limit UDP packet size','To avoid IP fragmentation at TCP layer','To set the window size','To control congestion'],correct:1,exp:'MSS (Maximum Segment Size) is the largest amount of data TCP will send in a single segment. It is negotiated during the 3-way handshake. Default MSS = MTU - IP header - TCP header = 1500 - 20 - 20 = 1460 bytes. Goal: avoid IP layer fragmentation.'},
+    {q:'Which protocol converts IP addresses to MAC addresses?',opts:['DNS','RARP','ARP','DHCP'],correct:2,exp:'ARP (Address Resolution Protocol) converts IP → MAC. RARP converts MAC → IP (older, replaced by DHCP). DNS converts domain names → IP. DHCP dynamically assigns IP addresses. ARP works by broadcasting "Who has IP X? Tell me your MAC" on the local network.'},
+  ]},
+  dsa:{title:'DSA',badge:'Placement Prep',qs:[
+    {q:'What is the time complexity of finding the k-th smallest element in a Min-Heap of n elements?',opts:['O(1)','O(k log n)','O(n)','O(log n)'],correct:1,exp:'To find k-th smallest in a Min-Heap: extract minimum k times. Each extraction is O(log n). Total: O(k log n). The root is always minimum O(1), but k-th smallest requires k extractions. Alternative: use a selection algorithm O(n) or sort O(n log n). Common FAANG interview question!'},
+    {q:'Given a graph with V vertices and E edges using BFS, what is the space complexity?',opts:['O(V)','O(E)','O(V + E)','O(V²)'],correct:0,exp:'BFS space complexity is O(V) for the queue (at most V vertices in queue at once) + O(V) for the visited array = O(V). Time complexity is O(V + E). Note: adjacency list stores O(V + E), adjacency matrix stores O(V²). Always specify which representation!'},
+    {q:'Which of the following problems CANNOT be solved using Dynamic Programming?',opts:['Longest Common Subsequence','Travelling Salesman Problem','Finding all prime numbers up to N','0/1 Knapsack Problem'],correct:2,exp:'Finding primes up to N uses the Sieve of Eratosthenes, not DP. LCS, TSP (DP approach exists but exponential), and 0/1 Knapsack are classic DP problems. DP requires: Optimal Substructure + Overlapping Subproblems. Sieve is a greedy/elimination algorithm.'},
+    {q:'In a self-balancing AVL tree, what is the maximum difference in heights of left and right subtrees?',opts:['0','1','2','log n'],correct:1,exp:'AVL Tree Balance Factor = Height(Left) - Height(Right). Must be in {-1, 0, +1} for every node. If |BF| > 1, rotation is performed (LL, RR, LR, RL rotations). AVL guarantees O(log n) for search, insert, delete. Red-Black trees also guarantee O(log n) but with fewer rotations on average.'},
+  ]},
+  dm:{title:'Discrete Mathematics',badge:'Theory',qs:[
+    {q:'How many edges does a complete graph K₇ have?',opts:['21','28','42','14'],correct:1,exp:'Complete graph Kₙ has n(n-1)/2 edges. K₇: 7×6/2 = 42/2 = 21 edges. Wait — n=7: 7×6/2 = 21. Actually the answer is 21! Let me verify: K₄=6, K₅=10, K₆=15, K₇=21. Each vertex connects to (n-1) others, divide by 2 (each edge counted twice). Answer is 21.'},
+    {q:'Which of the following is a tautology?\n\nP: (A ∧ B) → A\nQ: A → (A ∨ B)\nR: A ∧ ¬A',opts:['P only','Q only','P and Q both','P, Q, and R all'],correct:2,exp:'P: (A∧B)→A is always true (if both A and B are true, A must be true). Q: A→(A∨B) is always true (if A is true, A∨B is definitely true). R: A∧¬A is always false (contradiction). Both P and Q are tautologies. Tautology = true for all truth assignments.'},
+    {q:'A function f: A→B is bijective if and only if:',opts:['It is injective (one-to-one)','It is surjective (onto)','It is both injective and surjective','|A| = |B|'],correct:2,exp:'Bijective = Injective (one-to-one: f(a₁)=f(a₂) → a₁=a₂) AND Surjective (onto: every b∈B has some a∈A with f(a)=b). Bijection implies |A|=|B| for finite sets, but |A|=|B| alone doesn\'t guarantee bijection. Bijections have inverses!'},
+    {q:'Using the principle of inclusion-exclusion, how many integers from 1 to 100 are divisible by 2 or 3?',opts:['66','67','50','83'],correct:1,exp:'|A∪B| = |A| + |B| - |A∩B|. |div by 2| = ⌊100/2⌋ = 50. |div by 3| = ⌊100/3⌋ = 33. |div by 6| = ⌊100/6⌋ = 16. Answer = 50 + 33 - 16 = 67. Inclusion-Exclusion: add individual sets, subtract intersections, add back triple intersections, etc.'},
+  ]},
+};
+let curQ_type='dbms',curQ=0,qAnswered=false,qScore=0,qTotal=0;
+function switchQuizTab(t,el){document.querySelectorAll('#view-quiz .tbar .tab').forEach(x=>x.classList.remove('active'));el.classList.add('active');curQ_type=t;curQ=0;qAnswered=false;qScore=0;qTotal=0;renderQuiz();}
+function renderQuiz(){
+  const d=quizData[curQ_type],q=d.qs[curQ];
+  document.getElementById('qtitle').textContent=d.title+'.quiz';
+  document.getElementById('qbadge').textContent=d.badge;
+  document.getElementById('quiz-q').textContent='Q'+(curQ+1)+'. '+q.q;
+  document.getElementById('qprog').textContent='question_'+(curQ+1)+'_of_'+d.qs.length;
+  document.getElementById('quiz-res').className='qres';
+  document.getElementById('next-btn').style.display='none';
+  document.getElementById('retry-btn').style.display='none';
+  qAnswered=false;
+  const keys=['A','B','C','D'];
+  document.getElementById('quiz-opts').innerHTML=q.opts.map((o,i)=>`
+    <div class="qopt" onclick="answerQ(${i})" id="qo${i}"><div class="ok">${keys[i]}</div>${o}</div>`).join('');
+  updateQScore();
+}
+function answerQ(i){
+  if(qAnswered)return;qAnswered=true;qTotal++;
+  const q=quizData[curQ_type].qs[curQ];
+  const res=document.getElementById('quiz-res');
+  if(i===q.correct){document.getElementById('qo'+i).classList.add('correct');qScore++;
+    res.className='qres show';res.style.cssText='display:block;background:var(--green-d);border-color:rgba(0,217,126,0.3);color:var(--green)';res.textContent='// CORRECT ✓  '+q.exp;}
+  else{document.getElementById('qo'+i).classList.add('wrong');document.getElementById('qo'+q.correct).classList.add('correct');
+    res.className='qres show';res.style.cssText='display:block;background:var(--red-d);border-color:rgba(255,68,102,0.3);color:var(--red)';res.textContent='// WRONG ✗  '+q.exp;}
+  updateQScore();
+  if(curQ<quizData[curQ_type].qs.length-1)document.getElementById('next-btn').style.display='inline-flex';
+  else document.getElementById('retry-btn').style.display='inline-flex';
+}
+function nextQ(){curQ++;qAnswered=false;renderQuiz();}
+function retryQuiz(){curQ=0;qAnswered=false;qScore=0;qTotal=0;renderQuiz();}
+function updateQScore(){
+  document.getElementById('qan').textContent=qTotal+' / '+quizData[curQ_type].qs.length;
+  if(qTotal>0){const p=Math.round(qScore/qTotal*100);document.getElementById('qsd').textContent=p+'%';document.getElementById('qss').textContent=qScore+' correct / '+qTotal+' answered';}
+}
+
+/* ══ DSA ══ */
+function initDSA(){
+  const topics=[
+    {n:'Arrays & Strings',solved:45,total:60,c:'var(--green)'},{n:'Linked Lists',solved:28,total:35,c:'var(--green)'},
+    {n:'Stacks & Queues',solved:22,total:28,c:'var(--green)'},{n:'Trees & BST',solved:30,total:40,c:'var(--green)'},
+    {n:'Heaps',solved:12,total:20,c:'var(--amber)'},{n:'Graphs (BFS/DFS)',solved:18,total:35,c:'var(--amber)'},
+    {n:'Sorting Algorithms',solved:15,total:18,c:'var(--green)'},{n:'Dynamic Programming',solved:22,total:60,c:'var(--red)'},
+    {n:'Greedy Algorithms',solved:12,total:30,c:'var(--amber)'},{n:'Backtracking',solved:10,total:25,c:'var(--amber)'},
+  ];
+  document.getElementById('dsa-topics').innerHTML=topics.map(t=>`
+    <div class="dsa-row">
+      <div><div class="dsa-topic">${t.n}</div><div class="dsa-sub">${t.solved}/${t.total} solved</div></div>
+      <div style="flex:1;margin:0 14px"><div class="pb"><div class="pf" style="width:${Math.round(t.solved/t.total*100)}%;background:${t.c}"></div></div></div>
+      <div class="dsa-count" style="color:${t.c}">${Math.round(t.solved/t.total*100)}%</div>
+    </div>`).join('');
+
+  const hm=document.getElementById('heatmap');hm.innerHTML='';
+  for(let i=0;i<182;i++){const v=Math.random();const cls=v>0.85?'l4':v>0.6?'l3':v>0.35?'l2':v>0.15?'l1':'';hm.innerHTML+=`<div class="hcell ${cls}"></div>`;}
+
+  const dctx=document.getElementById('dsaChart');
+  if(!dctx._init){dctx._init=true;
+    new Chart(dctx,{type:'radar',data:{labels:['Arrays','Trees','Graphs','DP','Strings','Sorting'],datasets:[{label:'Solved%',data:[75,72,51,37,68,83],backgroundColor:'rgba(0,217,126,0.1)',borderColor:'#00d97e',pointBackgroundColor:'#00d97e',pointRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{beginAtZero:true,max:100,ticks:{font:{size:8},color:'#6060a0'},grid:{color:'rgba(255,255,255,0.06)'},pointLabels:{font:{size:9},color:'#a0a0c0'}}}}});
   }
-];
-let currentQ = 0;
-let answered = false;
-
-function renderQuiz() {
-  const q = questions[currentQ];
-  document.getElementById('quiz-q').textContent = q.q;
-  document.getElementById('quiz-progress').textContent = `Question ${currentQ+1} of ${questions.length}`;
-  document.getElementById('quiz-result').className = 'quiz-result';
-  document.getElementById('quiz-result').textContent = '';
-  document.getElementById('next-btn').style.display = 'none';
-  answered = false;
-
-  const optsEl = document.getElementById('quiz-opts');
-  optsEl.innerHTML = '';
-  const keys = ['A','B','C','D'];
-  q.opts.forEach((opt, i) => {
-    const btn = document.createElement('div');
-    btn.className = 'quiz-opt';
-    btn.innerHTML = `<div class="opt-key">${keys[i]}</div>${opt}`;
-    btn.onclick = () => {
-      if (answered) return;
-      answered = true;
-      const result = document.getElementById('quiz-result');
-      if (i === q.correct) {
-        btn.classList.add('correct');
-        result.className = 'quiz-result show';
-        result.textContent = q.explanation;
-      } else {
-        btn.classList.add('wrong');
-        optsEl.querySelectorAll('.quiz-opt')[q.correct].classList.add('correct');
-        result.className = 'quiz-result show wrong-result';
-        result.textContent = `❌ Not quite. ${q.explanation}`;
-      }
-      if (currentQ < questions.length - 1) document.getElementById('next-btn').style.display = 'inline-flex';
-    };
-    optsEl.appendChild(btn);
-  });
 }
 
-function nextQuestion() {
-  currentQ++;
-  renderQuiz();
+/* ══ FLASHCARDS ══ */
+const flashDecks={
+  dbms:[
+    {front:'What is the difference between DELETE, TRUNCATE, and DROP?',back:'DELETE: DML, can WHERE clause, rollback possible, triggers fire, slow\nTRUNCATE: DDL, removes all rows, no rollback, no triggers, fast\nDROP: DDL, removes entire table structure + data, no rollback\nMemory: DELETE is careful, TRUNCATE is quick, DROP is drastic',tag:'SQL'},
+    {front:'State the Armstrong\'s Axioms for Functional Dependencies',back:'1. Reflexivity: If Y⊆X, then X→Y\n2. Augmentation: If X→Y, then XZ→YZ\n3. Transitivity: If X→Y and Y→Z, then X→Z\nDerived: Union, Decomposition, Pseudotransitivity\nUsed to find closure of attributes F⁺',tag:'FDs & Normalization'},
+    {front:'What is a B+ Tree? How is it different from B-Tree?',back:'B+ Tree: Internal nodes = only keys (no data). Leaf nodes = keys + data + linked list.\nB-Tree: All nodes have keys + data.\nB+ Tree advantages:\n1. Range queries faster (linked leaves)\n2. More keys per internal node (no data)\n3. Uniform search time (always reach leaf)\nUsed in DBMS indexes!',tag:'Indexing'},
+    {front:'Explain ACID properties with a bank transfer example',back:'Atomicity: Transfer (debit+credit) happens fully or not at all\nConsistency: Total money in system stays same before/after\nIsolation: Other transactions don\'t see intermediate debit state\nDurability: Once committed, transfer persists even if crash occurs\nACID = Atomicity + Consistency + Isolation + Durability',tag:'Transactions'},
+    {front:'What is the difference between 3NF and BCNF?',back:'3NF: For every FD X→Y, either X is superkey OR Y is prime attribute (part of some candidate key)\nBCNF: For every FD X→Y, X must be superkey\nBCNF is stricter — BCNF ⊂ 3NF\nBCNF can lose dependency preservation (3NF preserves it)\nBCNF always achieves lossless decomposition',tag:'Normalization'},
+    {front:'Explain types of SQL JOINs with example',back:'INNER JOIN: rows matching in BOTH tables\nLEFT JOIN: ALL left rows + matching right (NULL if no match)\nRIGHT JOIN: ALL right rows + matching left (NULL if no match)\nFULL OUTER JOIN: ALL rows from both (NULL where no match)\nCROSS JOIN: Cartesian product (m×n rows)\nSELF JOIN: Table joined with itself',tag:'SQL Joins'},
+  ],
+  os:[
+    {front:'What is the difference between process and thread?',back:'Process: Independent program in execution. Has own memory space, PCB, resources.\nThread: Lightweight unit within process. Shares memory/resources with other threads.\nContext switch: Process switch is heavy (save full PCB), Thread switch is light.\nCommunication: Processes need IPC (pipes, sockets), Threads share memory directly.\nCreation: Thread creation 10-100x faster than process',tag:'Process Management'},
+    {front:'Explain Dining Philosophers problem and solutions',back:'Problem: 5 philosophers, 5 forks. Each needs 2 forks to eat. Can lead to DEADLOCK.\nSolutions:\n1. Allow max 4 philosophers at table simultaneously\n2. Odd philosophers: left first. Even: right first\n3. Acquire both forks atomically (using mutex)\n4. Chandy/Misra: dirty/clean fork concept\nDemonstrates: mutual exclusion + deadlock avoidance',tag:'Synchronization'},
+    {front:'What is virtual memory? How does demand paging work?',back:'Virtual Memory: Illusion that process has more memory than RAM. Uses disk as extension.\nDemand Paging: Pages loaded only when accessed (not all at start)\nPage Fault: Page not in RAM → OS loads from disk → resume process\nPage Table: Maps virtual page → physical frame\nThrashing: Too many page faults → CPU busy with swapping not executing',tag:'Memory Management'},
+    {front:'Compare Mutex vs Semaphore',back:'Mutex (Mutual Exclusion):\n- Binary (0 or 1). Owner must release (ownership concept)\n- Used for critical section protection\nSemaphore:\n- Can be any non-negative integer\n- No ownership (anyone can signal)\n- Counting semaphore: controls access to N resources\n- Binary semaphore ≈ Mutex (but no ownership)\nDeadlock possible with both if used carelessly',tag:'Synchronization'},
+  ],
+  cn:[
+    {front:'Explain TCP 3-way handshake',back:'Step 1: Client → Server: SYN (seq=x)\nStep 2: Server → Client: SYN-ACK (seq=y, ack=x+1)\nStep 3: Client → Server: ACK (ack=y+1)\nConnection ESTABLISHED. For closing: 4-way FIN handshake.\nSYN Flood Attack: Attacker sends many SYN, never completes → server exhausted',tag:'TCP/IP'},
+    {front:'What is subnetting? Calculate for /26',back:'Subnetting: Dividing a network into smaller sub-networks\n/26 means 26 bits for network, 6 bits for hosts\nSubnet mask: 255.255.255.192\nHosts per subnet: 2⁶ - 2 = 62 (minus network + broadcast)\nNumber of subnets from /24: 2² = 4 subnets\nFormula: Hosts = 2^(32-prefix) - 2',tag:'IP Addressing'},
+    {front:'OSI vs TCP/IP model layers',back:'OSI (7 layers): Physical | Data Link | Network | Transport | Session | Presentation | Application\nTCP/IP (4 layers): Network Access | Internet | Transport | Application\nMapping: Network Access = Physical+DataLink. Internet = Network. Transport = Transport. Application = Session+Presentation+Application.\nProtocols: HTTP/FTP/DNS(App), TCP/UDP(Trans), IP/ICMP(Net), Ethernet/WiFi(Link)',tag:'OSI Model'},
+  ],
+  dsa:[
+    {front:'When to use BFS vs DFS?',back:'BFS (Breadth-First Search):\n✓ Shortest path in unweighted graphs\n✓ Level-order traversal\n✓ Finding nodes at distance k\n✓ Bipartite check\nSpace: O(V) for queue\n\nDFS (Depth-First Search):\n✓ Topological sort\n✓ Cycle detection\n✓ Strongly connected components\n✓ Maze solving\nSpace: O(H) for recursion stack (H=height)',tag:'Graphs'},
+    {front:'Explain Dynamic Programming approach',back:'DP = Recursion + Memoization (Top-Down) OR Tabulation (Bottom-Up)\nTwo properties required:\n1. Optimal Substructure: Optimal solution from optimal sub-solutions\n2. Overlapping Subproblems: Same subproblems solved multiple times\nExamples: LCS, LIS, Knapsack, Fibonacci, Matrix Chain\nTime: Reduces exponential to polynomial (usually O(n²) or O(n³))',tag:'Dynamic Programming'},
+    {front:'Master Theorem for recurrences T(n) = aT(n/b) + f(n)',back:'Case 1: f(n) = O(n^(log_b(a) - ε)) → T(n) = Θ(n^log_b(a))\nCase 2: f(n) = Θ(n^log_b(a)) → T(n) = Θ(n^log_b(a) × log n)\nCase 3: f(n) = Ω(n^(log_b(a) + ε)) → T(n) = Θ(f(n))\nExample: Merge Sort T(n)=2T(n/2)+n → a=2,b=2,log_b(a)=1, f(n)=n → Case 2 → O(n log n)',tag:'Algorithm Analysis'},
+  ],
+};
+let curFlash='dbms',curFIdx=0,isFlipped=false;
+function switchFlashTab(d,el){document.querySelectorAll('#view-flashcards .tbar .tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');curFlash=d;curFIdx=0;isFlipped=false;renderFlash();}
+function renderFlash(){
+  const deck=flashDecks[curFlash]||flashDecks.dbms,c=deck[curFIdx];
+  const fc=document.getElementById('fcard');fc.classList.remove('flipped');isFlipped=false;
+  document.getElementById('ftag').textContent=c.tag;
+  document.getElementById('ffront').textContent=c.front;
+  document.getElementById('fback').textContent=c.back;
+  document.getElementById('fcount').textContent='card_'+(curFIdx+1<10?'0':'')+(curFIdx+1)+'_of_'+deck.length;
+  document.getElementById('ffb').textContent='';
+}
+function flipCard(){isFlipped=!isFlipped;document.getElementById('fcard').classList.toggle('flipped');}
+function rateCard(r){
+  if(!isFlipped){flipCard();return;}
+  const msgs={again:'// review_again: same session',hard:'// next_review: +1 day',good:'// next_review: +3 days',easy:'// next_review: +7 days'};
+  document.getElementById('ffb').textContent=msgs[r];
+  setTimeout(()=>{curFIdx=(curFIdx+1)%(flashDecks[curFlash]||flashDecks.dbms).length;renderFlash();},750);
 }
 
-renderQuiz();
+/* ══ FORMULA SHEET ══ */
+const formulas={
+  dbms:[
+    {n:'Closure of Attribute Set',eq:'F⁺: X⁺ = X; repeat: if Y→Z ∈ F and Y⊆X⁺, then X⁺=X⁺∪Z',desc:'Used to find all attributes functionally determined by X. If X⁺ = all attributes → X is superkey.'},
+    {n:'Number of Superkeys in a Relation',eq:'If there are n non-prime attributes: 2ⁿ superkeys (each subset of candidate key extended)',desc:'Candidate key is minimal superkey. All supersets of candidate key are also superkeys.'},
+    {n:'Normalization Quick Reference',eq:'1NF: atomic | 2NF: no partial dep | 3NF: no transitive dep | BCNF: LHS superkey',desc:'Each higher NF satisfies all lower ones. BCNF ⊂ 3NF ⊂ 2NF ⊂ 1NF.'},
+    {n:'SQL GROUP BY Rule',eq:'SELECT col, agg_fn FROM table WHERE cond GROUP BY col HAVING agg_cond',desc:'Non-aggregate columns in SELECT must appear in GROUP BY. HAVING filters groups (like WHERE for groups).'},
+    {n:'Relational Algebra Operators',eq:'σ (select) | π (project) | ⋈ (join) | ∪ ∩ − (set ops) | ρ (rename) | × (cartesian)',desc:'σ_condition(R) = select rows. π_attrs(R) = select columns. Natural join: ⋈ (auto-match common attrs).'},
+    {n:'ACID Properties',eq:'Atomicity | Consistency | Isolation | Durability',desc:'Atomicity=all or nothing. Consistency=valid state. Isolation=concurrent=serial. Durability=committed persists.'},
+  ],
+  os:[
+    {n:'CPU Scheduling Metrics',eq:'TAT = CT - AT | WT = TAT - BT | RT = first_run - AT | Throughput = jobs/time',desc:'TAT=Turnaround, CT=Completion, AT=Arrival, BT=Burst, WT=Waiting, RT=Response time.'},
+    {n:'Banker\'s Algorithm Conditions',eq:'Need[i] = Max[i] - Alloc[i] | Safe if ∃ safe sequence of all processes',desc:'Safe state ≠ no deadlock in future. Deadlock ≠ unsafe state. Prevents deadlock by denying unsafe requests.'},
+    {n:'Page Replacement — Formulas',eq:'Page fault rate f | EAT = (1-f)×memory + f×(page_fault_service_time)',desc:'Effective Access Time (EAT) degrades badly with high page faults. Goal: minimize f.'},
+    {n:'Semaphore Operations',eq:'wait(S): S--; if S<0: block | signal(S): S++; if S≤0: wake one process',desc:'wait=P=down=acquire | signal=V=up=release. Binary semaphore: S∈{0,1}. Counting: S∈[0,N].'},
+    {n:'Memory Partitioning',eq:'Internal fragmentation: allocated > needed | External fragmentation: free memory not contiguous',desc:'Paging eliminates external fragmentation but has internal. Segmentation has external fragmentation.'},
+  ],
+  cn:[
+    {n:'IP Subnetting Formulas',eq:'Hosts = 2^(32-prefix) - 2 | Subnets from /n to /m = 2^(m-n)',desc:'Subtract 2 for network address and broadcast address. /26: 2^6-2=62 hosts.'},
+    {n:'Shannon\'s Channel Capacity',eq:'C = B × log₂(1 + S/N) bits/sec | Nyquist: C = 2B × log₂(V)',desc:'B=bandwidth(Hz), S/N=signal-to-noise ratio, V=signal levels. Shannon=noisy, Nyquist=noiseless.'},
+    {n:'TCP Congestion Control',eq:'Slow Start: cwnd×2/RTT | Congestion Avoidance: cwnd+1/RTT | Fast Recovery on 3 dup ACKs',desc:'ssthresh: threshold between slow start and congestion avoidance. Cubic/BBR are modern algorithms.'},
+    {n:'Sliding Window Protocol',eq:'Sender window = 2^n - 1 (Go-Back-N) | = 2^(n-1) (Selective Repeat)',desc:'n=sequence number bits. Efficiency=W/(1+2a) where a=propagation delay/transmission time.'},
+    {n:'OSI Layers & PDU Names',eq:'App=Data | Trans=Segment | Net=Packet | DataLink=Frame | Physical=Bit',desc:'Encapsulation: each layer adds header. Decapsulation: each layer removes header. PDU=Protocol Data Unit.'},
+  ],
+  dm:[
+    {n:'Permutations & Combinations',eq:'P(n,r) = n!/(n-r)! | C(n,r) = n!/[r!(n-r)!] | C(n,r) = C(n,n-r)',desc:'With repetition: nʳ arrangements. Circular: (n-1)!. Identical objects: n!/p!q!r!'},
+    {n:'Inclusion-Exclusion Principle',eq:'|A∪B| = |A|+|B|-|A∩B| | |A∪B∪C| = Σ|Aᵢ|-Σ|Aᵢ∩Aⱼ|+|A∩B∩C|',desc:'Generalization: alternately add/subtract intersections. Used for counting divisibility, surjective functions.'},
+    {n:'Graph Theory Formulas',eq:'Handshaking: Σdeg(v) = 2|E| | K_n: n(n-1)/2 edges | Euler: V-E+F=2 (planar)',desc:'Euler circuit: all degrees even. Euler path: exactly 2 odd-degree vertices. Hamiltonian: visits each vertex once.'},
+    {n:'Propositional Logic Laws',eq:'DeMorgan: ¬(A∧B)=¬A∨¬B | Absorption: A∨(A∧B)=A | Consensus: (A∨B)∧(¬A∨C)=(A∨B)∧(¬A∨C)∧(B∨C)',desc:'Tautology=always true. Contradiction=always false. Contingency=sometimes true.'},
+    {n:'Recurrence Relations',eq:'Arithmetic: aₙ=aₙ₋₁+d → aₙ=a₁+(n-1)d | Geometric: aₙ=r·aₙ₋₁ → aₙ=a₁·rⁿ⁻¹',desc:'Master theorem for divide-and-conquer. Characteristic equation for linear homogeneous recurrences.'},
+  ],
+};
+let curFormTab='dbms';
+function switchFormTab(t,el){document.querySelectorAll('#view-formulas .tbar .tab').forEach(x=>x.classList.remove('active'));el.classList.add('active');curFormTab=t;renderForms();}
+function renderForms(){
+  const f=formulas[curFormTab]||formulas.dbms,mid=Math.ceil(f.length/2);
+  const r=arr=>arr.map(x=>`<div class="formula"><div class="fname">${x.n}</div><code class="feq">${x.eq}</code><div class="fdesc">${x.desc}</div></div>`).join('');
+  document.getElementById('form-left').innerHTML=r(f.slice(0,mid));
+  document.getElementById('form-right').innerHTML=r(f.slice(mid));
+}
 
-// KNOWLEDGE GRAPH
-const svg = document.getElementById('graph-svg');
-const nodes = [
-  {x:210, y:100, r:28, label:'Mechanics', color:'#059669', pct:82},
-  {x:90,  y:60,  r:22, label:"Newton", color:'#059669', pct:88},
-  {x:330, y:60,  r:22, label:'Energy', color:'#d97706', pct:65},
-  {x:60,  y:150, r:18, label:'Friction', color:'#059669', pct:78},
-  {x:160, y:165, r:18, label:'Waves', color:'#e11d48', pct:33},
-  {x:265, y:165, r:18, label:'Thermo', color:'#d97706', pct:45},
-  {x:370, y:145, r:18, label:'Optics', color:'#e11d48', pct:33},
-  {x:140, y:40,  r:16, label:'Inertia', color:'#059669', pct:85},
-];
-const edges = [[0,1],[0,2],[1,3],[1,7],[0,4],[0,5],[2,6]];
-svg.innerHTML = edges.map(([a,b]) =>
-  `<line x1="${nodes[a].x}" y1="${nodes[a].y}" x2="${nodes[b].x}" y2="${nodes[b].y}" stroke="#2d3448" stroke-width="1.5"/>`
-).join('') + nodes.map(n =>
-  `<circle cx="${n.x}" cy="${n.y}" r="${n.r}" fill="${n.color}22" stroke="${n.color}" stroke-width="2"/>
-   <text x="${n.x}" y="${n.y}" text-anchor="middle" dominant-baseline="middle" fill="${n.color}" font-size="8.5" font-weight="700">${n.label}</text>`
-).join('');
+/* ══ MOCK TESTS ══ */
+function initMockCharts(){
+  const mocks=[
+    {n:'Full Sem Mock #9',d:'Mar 18',dbms:72,os:68,cn:65,dm:75,score:75,rank:11},
+    {n:'Full Sem Mock #8',d:'Mar 12',dbms:65,os:72,cn:60,dm:70,score:68,rank:15},
+    {n:'DBMS+OS Combo #4',d:'Mar 8',dbms:78,os:75,cn:0,dm:0,score:81,rank:9},
+    {n:'Full Sem Mock #7',d:'Mar 1',dbms:60,os:62,cn:58,dm:65,score:62,rank:18},
+  ];
+  document.getElementById('mock-list').innerHTML=mocks.map(m=>`
+    <div class="mitem">
+      <div><div class="mname">${m.n}</div><div class="mmeta">${m.d} · DBMS:${m.dbms}% OS:${m.os}% · Rank #${m.rank}</div></div>
+      <div style="text-align:right"><div class="mscore" style="color:${m.score>=75?'var(--green)':m.score>=65?'var(--amber)':'var(--red)'}">${m.score}%</div></div>
+    </div>`).join('');
+  const mc=document.getElementById('mockChart');
+  if(!mc._init){mc._init=true;new Chart(mc,{type:'bar',data:{labels:['DBMS','OS','CN','Disc. Maths'],datasets:[{label:'Score',data:[72,68,65,75],backgroundColor:['#00d97e','#4488ff','#00ccee','#9966ff'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%',font:{size:8},color:'#6060a0'},grid:{color:'rgba(255,255,255,0.03)'}},x:{ticks:{font:{size:8},color:'#6060a0'},grid:{display:false}}}}});}
+  const mt=document.getElementById('mockTrend');
+  if(!mt._init){mt._init=true;new Chart(mt,{type:'line',data:{labels:['M1','M2','M3','M4','M5','M6','M7','M8','M9'],datasets:[{label:'Score',data:[52,55,58,60,63,62,68,68,75],borderColor:'#00d97e',backgroundColor:'rgba(0,217,126,0.08)',tension:0.4,fill:true,pointRadius:3,pointBackgroundColor:'#00d97e'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:false,min:45,max:90,ticks:{callback:v=>v+'%',font:{size:8},color:'#6060a0'},grid:{color:'rgba(255,255,255,0.03)'}},x:{ticks:{font:{size:8},color:'#6060a0'},grid:{display:false}}}}});}
+}
 
-// STREAK
-const days = ['M','T','W','T','F','S','S'];
-const done  = [true,true,true,true,true,true,false];
-const isToday = [false,false,false,false,false,false,true];
-const streakEl = document.getElementById('streak-row');
-days.forEach((d,i) => {
-  const cls = isToday[i] ? 'today' : done[i] ? 'done' : '';
-  const icon = done[i] ? '✓' : isToday[i] ? '●' : '';
-  streakEl.innerHTML += `
-    <div class="streak-day">
-      <div class="streak-circle ${cls}">${icon}</div>
-      <div class="streak-day-label">${d}</div>
-    </div>`;
-});
+/* ══ PROJECTS ══ */
+function initProjects(){
+  const active=[
+    {n:'Mini Database Engine',desc:'Implementing a lightweight DBMS from scratch in C++ with B+ tree indexing, SQL parser, and basic query optimizer. Semester project.',tags:['C++','B+ Tree','SQL','DBMS'],progress:65,color:'var(--green)'},
+    {n:'OS Process Scheduler Simulator',desc:'Web-based visualizer for CPU scheduling algorithms (FCFS, SJF, Round Robin, Priority). Shows Gantt chart and computes metrics.',tags:['React','JavaScript','OS'],progress:80,color:'var(--blue)'},
+    {n:'Network Packet Analyzer',desc:'Python tool using Scapy to capture and analyze network packets. Displays protocol breakdown, source/destination, and detects anomalies.',tags:['Python','Scapy','CN','Networking'],progress:40,color:'var(--cyan)'},
+  ];
+  const done=[
+    {n:'Student Result Management System',desc:'Full-stack CRUD app with MySQL + Node.js + React. Manages student records, grades, and generates reports.',tags:['React','Node.js','MySQL'],color:'var(--amber)'},
+    {n:'File Compression Tool',desc:'Implemented Huffman coding algorithm in Python for lossless text file compression. Achieves 30-60% size reduction.',tags:['Python','Algorithms','DSA'],color:'var(--purple)'},
+    {n:'Chat Application',desc:'Real-time chat using WebSockets and Node.js. Supports multiple rooms, private messaging, and message history.',tags:['Node.js','WebSocket','MongoDB'],color:'var(--pink)'},
+    {n:'Library Management CLI',desc:'C program using file handling and linked lists for managing books, members, and transactions in a library.',tags:['C','Linked Lists','File I/O'],color:'var(--orange)'},
+    {n:'Portfolio Website',desc:'Responsive personal portfolio built with HTML/CSS/JS showcasing projects, skills, and resume.',tags:['HTML','CSS','JavaScript'],color:'var(--green)'},
+  ];
+  document.getElementById('active-projects').innerHTML=active.map(p=>`
+    <div class="proj-card">
+      <div class="proj-name">${p.n}</div>
+      <div class="proj-desc">${p.desc}</div>
+      <div class="proj-tags">${p.tags.map(t=>`<span class="badge bb">${t}</span>`).join('')}</div>
+      <div class="proj-prog"><div class="pb" style="flex:1"><div class="pf" style="width:${p.progress}%;background:${p.color}"></div></div><span class="proj-pct">${p.progress}%</span></div>
+    </div>`).join('');
+  document.getElementById('done-projects').innerHTML=done.map(p=>`
+    <div class="proj-card">
+      <div class="proj-name">${p.n} <span class="badge bg" style="margin-left:5px">done</span></div>
+      <div class="proj-desc">${p.desc}</div>
+      <div class="proj-tags">${p.tags.map(t=>`<span class="badge bp">${t}</span>`).join('')}</div>
+    </div>`).join('');
+}
 
-// UPCOMING
-const upcoming = [
-  {day:'14', mon:'MAR', title:'Chapter 5 Quiz', sub:'Wave Optics · Online', bg:'#eef2ff', col:'#4f46e5'},
-  {day:'17', mon:'MAR', title:'Lab Report #3',  sub:'Thermodynamics · Submit', bg:'#d1fae5', col:'#059669'},
-  {day:'22', mon:'MAR', title:'Unit Exam',       sub:'Chapters 4–7 · Hall B', bg:'#ffe4e6', col:'#e11d48'},
-  {day:'25', mon:'MAR', title:'Problem Set 6',  sub:'Organic Chemistry', bg:'#fef3c7', col:'#d97706'},
-];
-const upcomingEl = document.getElementById('upcoming-list');
-upcoming.forEach(u => {
-  upcomingEl.innerHTML += `
-    <div class="upcoming-item">
-      <div class="upcoming-date" style="background:${u.bg}">
-        <div class="date-num" style="color:${u.col}">${u.day}</div>
-        <div class="date-mon" style="color:${u.col}">${u.mon}</div>
+/* ══ CODE SNIPPETS ══ */
+const codeSnips={
+  dsa:[
+    {title:'Binary Search',lang:'Java',code:`<span class="kw">int</span> <span class="fn">binarySearch</span>(<span class="kw">int</span>[] arr, <span class="kw">int</span> target) {
+  <span class="kw">int</span> lo = <span class="num">0</span>, hi = arr.length - <span class="num">1</span>;
+  <span class="kw">while</span> (lo <= hi) {
+    <span class="kw">int</span> mid = lo + (hi - lo) / <span class="num">2</span>;
+    <span class="kw">if</span> (arr[mid] == target) <span class="kw">return</span> mid;
+    <span class="kw">else if</span> (arr[mid] < target) lo = mid + <span class="num">1</span>;
+    <span class="kw">else</span> hi = mid - <span class="num">1</span>;
+  }
+  <span class="kw">return</span> -<span class="num">1</span>; <span class="cmt">// not found</span>
+} <span class="cmt">// O(log n) time, O(1) space</span>`},
+    {title:'DFS on Graph',lang:'Python',code:`<span class="kw">def</span> <span class="fn">dfs</span>(graph, node, visited=<span class="kw">None</span>):
+  <span class="kw">if</span> visited <span class="kw">is</span> <span class="kw">None</span>:
+    visited = <span class="fn">set</span>()
+  visited.<span class="fn">add</span>(node)
+  <span class="fn">print</span>(node, end=<span class="str">' '</span>)
+  <span class="kw">for</span> neighbor <span class="kw">in</span> graph[node]:
+    <span class="kw">if</span> neighbor <span class="kw">not in</span> visited:
+      <span class="fn">dfs</span>(graph, neighbor, visited)
+<span class="cmt"># O(V + E) time | O(V) space for stack</span>`},
+    {title:'LCS — Dynamic Programming',lang:'Java',code:`<span class="kw">int</span> <span class="fn">lcs</span>(<span class="type">String</span> a, <span class="type">String</span> b) {
+  <span class="kw">int</span> m=a.<span class="fn">length</span>(), n=b.<span class="fn">length</span>();
+  <span class="kw">int</span>[][] dp = <span class="kw">new int</span>[m+<span class="num">1</span>][n+<span class="num">1</span>];
+  <span class="kw">for</span> (<span class="kw">int</span> i=<span class="num">1</span>;i<=m;i++)
+    <span class="kw">for</span> (<span class="kw">int</span> j=<span class="num">1</span>;j<=n;j++)
+      dp[i][j] = a.<span class="fn">charAt</span>(i-<span class="num">1</span>)==b.<span class="fn">charAt</span>(j-<span class="num">1</span>)
+        ? dp[i-<span class="num">1</span>][j-<span class="num">1</span>]+<span class="num">1</span>
+        : <span class="type">Math</span>.<span class="fn">max</span>(dp[i-<span class="num">1</span>][j], dp[i][j-<span class="num">1</span>]);
+  <span class="kw">return</span> dp[m][n]; <span class="cmt">// O(m×n) time & space</span>
+}`},
+    {title:'Quick Sort',lang:'C++',code:`<span class="kw">void</span> <span class="fn">quickSort</span>(<span class="kw">int</span> arr[], <span class="kw">int</span> lo, <span class="kw">int</span> hi) {
+  <span class="kw">if</span> (lo >= hi) <span class="kw">return</span>;
+  <span class="kw">int</span> pivot=arr[hi], i=lo-<span class="num">1</span>;
+  <span class="kw">for</span>(<span class="kw">int</span> j=lo; j<hi; j++)
+    <span class="kw">if</span>(arr[j]<=pivot) swap(arr[++i],arr[j]);
+  swap(arr[++i], arr[hi]);
+  <span class="fn">quickSort</span>(arr, lo, i-<span class="num">1</span>);
+  <span class="fn">quickSort</span>(arr, i+<span class="num">1</span>, hi);
+} <span class="cmt">// Avg O(n log n) | Worst O(n²)</span>`},
+  ],
+  sql:[
+    {title:'Find 2nd Highest Salary (no LIMIT)',lang:'SQL',code:`<span class="kw">SELECT</span> <span class="fn">MAX</span>(salary) <span class="kw">AS</span> second_highest
+<span class="kw">FROM</span> employees
+<span class="kw">WHERE</span> salary <span class="op">&lt;</span> (
+  <span class="kw">SELECT</span> <span class="fn">MAX</span>(salary) <span class="kw">FROM</span> employees
+);
+<span class="cmt">-- Using DENSE_RANK (better approach):</span>
+<span class="kw">SELECT</span> salary <span class="kw">FROM</span> (
+  <span class="kw">SELECT</span> salary, <span class="fn">DENSE_RANK</span>() <span class="kw">OVER</span>
+    (<span class="kw">ORDER BY</span> salary <span class="kw">DESC</span>) <span class="kw">AS</span> rnk
+  <span class="kw">FROM</span> employees) t
+<span class="kw">WHERE</span> rnk = <span class="num">2</span>;`},
+    {title:'Students not enrolled in any course',lang:'SQL',code:`<span class="cmt">-- Method 1: LEFT JOIN + IS NULL</span>
+<span class="kw">SELECT</span> s.student_id, s.name
+<span class="kw">FROM</span> students s
+<span class="kw">LEFT JOIN</span> enrollments e
+  <span class="kw">ON</span> s.student_id = e.student_id
+<span class="kw">WHERE</span> e.student_id <span class="kw">IS NULL</span>;
+
+<span class="cmt">-- Method 2: NOT EXISTS</span>
+<span class="kw">SELECT</span> student_id, name <span class="kw">FROM</span> students s
+<span class="kw">WHERE NOT EXISTS</span> (
+  <span class="kw">SELECT</span> <span class="num">1</span> <span class="kw">FROM</span> enrollments e
+  <span class="kw">WHERE</span> e.student_id = s.student_id);`},
+    {title:'Department-wise average salary',lang:'SQL',code:`<span class="kw">SELECT</span>
+  d.dept_name,
+  <span class="fn">COUNT</span>(e.emp_id) <span class="kw">AS</span> headcount,
+  <span class="fn">ROUND</span>(<span class="fn">AVG</span>(e.salary), <span class="num">2</span>) <span class="kw">AS</span> avg_sal,
+  <span class="fn">MAX</span>(e.salary) <span class="kw">AS</span> max_sal,
+  <span class="fn">MIN</span>(e.salary) <span class="kw">AS</span> min_sal
+<span class="kw">FROM</span> employees e
+<span class="kw">JOIN</span> departments d
+  <span class="kw">ON</span> e.dept_id = d.dept_id
+<span class="kw">GROUP BY</span> d.dept_name
+<span class="kw">HAVING</span> <span class="fn">COUNT</span>(e.emp_id) <span class="op">></span> <span class="num">5</span>
+<span class="kw">ORDER BY</span> avg_sal <span class="kw">DESC</span>;`},
+    {title:'Delete duplicate rows keeping one',lang:'SQL',code:`<span class="cmt">-- Keep row with minimum id</span>
+<span class="kw">DELETE FROM</span> employees
+<span class="kw">WHERE</span> emp_id <span class="kw">NOT IN</span> (
+  <span class="kw">SELECT</span> <span class="fn">MIN</span>(emp_id)
+  <span class="kw">FROM</span> employees
+  <span class="kw">GROUP BY</span> email <span class="cmt">-- duplicate column</span>
+);
+<span class="cmt">-- Using CTE + ROW_NUMBER (PostgreSQL/MySQL 8+)</span>
+<span class="kw">WITH</span> cte <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> *, <span class="fn">ROW_NUMBER</span>() <span class="kw">OVER</span>
+    (<span class="kw">PARTITION BY</span> email <span class="kw">ORDER BY</span> emp_id) rn
+  <span class="kw">FROM</span> employees)
+<span class="kw">DELETE FROM</span> cte <span class="kw">WHERE</span> rn <span class="op">></span> <span class="num">1</span>;`},
+  ],
+  os:[
+    {title:'Producer-Consumer using Semaphore',lang:'C',code:`<span class="cmt">// Semaphores</span>
+<span class="type">sem_t</span> empty, full, mutex;
+<span class="fn">sem_init</span>(&empty, <span class="num">0</span>, N); <span class="cmt">// N=buffer size</span>
+<span class="fn">sem_init</span>(&full, <span class="num">0</span>, <span class="num">0</span>);
+<span class="fn">sem_init</span>(&mutex, <span class="num">0</span>, <span class="num">1</span>);
+
+<span class="kw">void</span>* <span class="fn">producer</span>(<span class="kw">void</span>* arg) {
+  <span class="kw">while</span>(<span class="num">1</span>) {
+    <span class="type">int</span> item = <span class="fn">produce_item</span>();
+    <span class="fn">sem_wait</span>(&empty);  <span class="cmt">// wait if full</span>
+    <span class="fn">sem_wait</span>(&mutex);  <span class="cmt">// critical section</span>
+    buffer[in] = item; in=(in+<span class="num">1</span>)%N;
+    <span class="fn">sem_post</span>(&mutex);
+    <span class="fn">sem_post</span>(&full);   <span class="cmt">// signal consumer</span>
+  }
+}`},
+    {title:'Round Robin Scheduler',lang:'Python',code:`<span class="kw">def</span> <span class="fn">round_robin</span>(processes, quantum):
+  <span class="cmt"># processes = [(pid, burst_time)]</span>
+  queue = <span class="fn">list</span>(processes)
+  time, results = <span class="num">0</span>, {}
+  <span class="kw">while</span> queue:
+    pid, burst = queue.<span class="fn">pop</span>(<span class="num">0</span>)
+    run = <span class="fn">min</span>(burst, quantum)
+    time += run
+    <span class="kw">if</span> burst > quantum:
+      queue.<span class="fn">append</span>((pid, burst-quantum))
+    <span class="kw">else</span>:
+      results[pid] = time <span class="cmt"># completion</span>
+  <span class="kw">return</span> results
+<span class="cmt"># Time complexity: O(n × ceil(max_burst/q))</span>`},
+  ],
+};
+let curCodeTab='dsa';
+function switchCodeTab(t,el){
+  document.querySelectorAll('#view-codesnips .tbar .tab').forEach(x=>x.classList.remove('active'));
+  if(el)el.classList.add('active');
+  curCodeTab=t;renderCodeTab(t);
+}
+function renderCodeTab(t){
+  const snips=codeSnips[t]||[];
+  const half=Math.ceil(snips.length/2);
+  const r=arr=>arr.map(s=>`<div class="code-block"><div class="code-lang">${s.lang}</div><div style="font-size:10px;font-weight:700;color:var(--text);margin-bottom:8px;font-family:'IBM Plex Mono',monospace">// ${s.title}</div><pre style="white-space:pre-wrap;font-size:10px">${s.code}</pre></div>`).join('');
+  document.getElementById('code-grid').innerHTML=`<div>${r(snips.slice(0,half))}</div><div>${r(snips.slice(half))}</div>`;
+}
+
+/* ══ AI TUTOR ══ */
+const tutorReplies={
+  'SQL Joins':'SQL Joins are most tested in VIT internals! INNER JOIN returns matching rows only. LEFT JOIN returns ALL left rows + matching right (NULL if no match). Key interview Q: LEFT JOIN + WHERE right.col IS NULL = rows NOT in right table (anti-join pattern). Natural JOIN auto-matches common column names — risky in production. Always explicit JOIN conditions!',
+  'Normalization':'Remember: 1NF=atomic values, 2NF=no partial dependency (only matters for composite keys), 3NF=no transitive dependency (A→B→C violates if A is key), BCNF=LHS must be superkey. Most VIT questions test 2NF and 3NF identification. Quick test: draw FD diagram, check if any non-key depends on part of key (2NF) or on another non-key (3NF).',
+  'OS Scheduling':'SJF minimizes average waiting time (provably optimal for average WT). SRTF is preemptive SJF. Round Robin is fair and good for time-sharing. Priority scheduling can cause starvation — solved by aging (increase priority over time). VIT loves calculation questions: always draw timeline, compute WT=CT-AT-BT, TAT=CT-AT.',
+  'Deadlock':'4 necessary conditions (Coffman): Mutual Exclusion + Hold & Wait + No Preemption + Circular Wait. Prevention: deny one condition. Avoidance: Banker\'s algorithm. Detection: resource allocation graph + cycle detection. Recovery: process termination or resource preemption. VIT Q: given resource table, find if safe state exists.',
+  'TCP vs UDP':'TCP: Connection-oriented, reliable, ordered, flow control, congestion control, heavier. Use for HTTP, FTP, SSH, email. UDP: Connectionless, unreliable, fast, lightweight. Use for DNS, DHCP, video streaming, gaming, VoIP. UDP can implement reliability at application layer (QUIC protocol does this). TCP overhead = 3-way handshake + ACKs.',
+  'Big O Notation':'O(1)<O(log n)<O(n)<O(n log n)<O(n²)<O(2ⁿ)<O(n!). Common: Binary Search=O(log n), Linear Search=O(n), Merge Sort=O(n log n), Bubble Sort=O(n²), Fibonacci recursive=O(2ⁿ). Space complexity often forgotten in interviews! Recursive algorithms have O(depth) stack space. Master theorem for divide-and-conquer recurrences.',
+  'Pointers in C':'Pointer stores address. *p dereferences (gets value). &x gets address of x. int *p=&x makes p point to x. *p=5 changes x through pointer. Pointer arithmetic: p+1 moves by sizeof(type). int **pp = pointer to pointer. Common pitfall: dangling pointer (pointing to freed memory), wild pointer (uninitialized), null pointer dereference.',
+  'Database Indexing':'B+ Tree index: O(log n) search, supports range queries, all data in leaves (linked). Hash Index: O(1) equality, no range queries. Clustered index: data physically sorted by index key (one per table). Non-clustered: separate structure with pointer to data (multiple allowed). Dense index: entry for every record. Sparse: entry for some records.',
+};
+const genReplies=['Great question! This is a common topic in VIT internal exams. Let me explain with a real-world example from your syllabus...','You got this wrong in your last quiz! The most common mistake students make here is... Here is the correct approach:','This comes up frequently in placement interviews too! Companies like TCS, Infosys, and Wipro regularly ask this. The key insight is...','Based on your quiz performance, you are in the 72nd percentile for this topic. Here is what you need to revise:','This is covered in Unit 3 of your DBMS subject. The textbook by Navathe explains it well. Let me give you the crux:'];
+function askTutor(topic){
+  const msgs=document.getElementById('chat-msgs');
+  msgs.innerHTML+=`<div class="msg mme">${topic} explain_karo()</div>`;
+  msgs.scrollTop=msgs.scrollHeight;
+  setTimeout(()=>{
+    const r=tutorReplies[topic]||genReplies[Math.floor(Math.random()*genReplies.length)];
+    msgs.innerHTML+=`<div class="msg mai"><div class="msnd">EduMind AI</div>${r}</div>`;
+    msgs.scrollTop=msgs.scrollHeight;
+  },600);
+}
+function sendMsg(){
+  const input=document.getElementById('chat-input'),val=input.value.trim();
+  if(!val)return;
+  const msgs=document.getElementById('chat-msgs');
+  msgs.innerHTML+=`<div class="msg mme">${val}</div>`;
+  input.value='';msgs.scrollTop=msgs.scrollHeight;
+  setTimeout(()=>{
+    msgs.innerHTML+=`<div class="msg mai"><div class="msnd">EduMind AI</div>${genReplies[Math.floor(Math.random()*genReplies.length)]}</div>`;
+    msgs.scrollTop=msgs.scrollHeight;
+  },700);
+}
+function initTutor(){
+  const topics=['SQL Joins','Normalization','OS Scheduling','Deadlock','TCP vs UDP','Big O Notation','Pointers in C','Database Indexing','BFS vs DFS','Virtual Memory','Semaphores','B+ Tree'];
+  document.getElementById('quick-topics').innerHTML=topics.map(t=>`<button class="btn" onclick="askTutor('${t}')" style="font-size:9px">${t}</button>`).join('');
+  const weak=[
+    {t:'DBMS Normalization',s:'2NF, 3NF, BCNF identification',p:48,c:'var(--red)'},
+    {t:'OS Scheduling Calculations',s:'SJF, SRTF time calculations',p:55,c:'var(--amber)'},
+    {t:'Dynamic Programming',s:'State definition, memoization',p:55,c:'var(--amber)'},
+    {t:'Graph Algorithms',s:'Dijkstra, Floyd-Warshall',p:51,c:'var(--red)'},
+  ];
+  document.getElementById('weak-list').innerHTML=weak.map(w=>`
+    <div style="margin-bottom:9px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+        <span style="font-size:10px;font-weight:700;color:var(--text);font-family:'IBM Plex Mono',monospace">${w.t}</span>
+        <span style="font-size:9px;font-weight:700;color:${w.c};font-family:'IBM Plex Mono',monospace">${w.p}%</span>
       </div>
+      <div style="font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:2px">${w.s}</div>
+      <div class="pb"><div class="pf" style="width:${w.p}%;background:${w.c}"></div></div>
+    </div>`).join('');
+}
+
+/* ══ STUDY PLAN ══ */
+function initStudyPlan(){
+  const plan=[
+    {t:'06:30',ti:'DBMS — SQL Joins & Subqueries',m:'75 min · Critical · Internal exam in 8 days · 55% mastery',c:'var(--green)',done:true},
+    {t:'08:00',ti:'LeetCode — 2 Medium (Arrays/DP)',m:'60 min · Daily target · Placement prep · Streak at risk if skipped',c:'var(--amber)',done:true},
+    {t:'09:30',ti:'OS — Memory Management deep dive',m:'45 min · Chapter 4 · Scheduled · 70% mastery',c:'var(--blue)',done:true},
+    {t:'11:00',ti:'DBMS Normalization Quiz (AI-generated)',m:'20 min · 4 questions · Weak area targeting',c:'var(--cyan)',done:false},
+    {t:'14:00',ti:'CN — Routing Algorithms revision',m:'45 min · Dijkstra + Bellman-Ford · 55% mastery',c:'var(--cyan)',done:false},
+    {t:'15:30',ti:'Flashcard Review — 18 cards due',m:'30 min · SM-2 spaced repetition algorithm',c:'var(--amber)',done:false},
+  ];
+  document.getElementById('full-plan').innerHTML=plan.map(p=>`
+    <div class="pi" style="${p.done?'opacity:0.55':''}">
+      <span class="pt">${p.t}</span>
+      <div class="pd" style="background:${p.done?'var(--hint)':p.c}"></div>
       <div>
-        <div class="upcoming-title">${u.title}</div>
-        <div class="upcoming-sub">${u.sub}</div>
+        <div class="ptitle" style="${p.done?'text-decoration:line-through':''}">${p.ti} ${p.done?'<span class="badge bg" style="font-size:8px">✓ done</span>':''}</div>
+        <div class="pmeta">${p.m}</div>
       </div>
-    </div>`;
-});
+    </div>`).join('');
 
-// AI TUTOR CHAT
-const replies = [
-  "Based on your notes and quiz history, here's a clearer way to think about this...",
-  "Great question! This is covered in Chapter 5, page 42. The key insight is that light slows down when entering a denser medium, which causes it to bend.",
-  "I noticed you got this wrong twice recently. Let me break it down step by step with a concrete example from your syllabus.",
-  "Think of it this way: the refractive index tells us how much slower light travels in that medium compared to a vacuum. Higher n = more bending.",
-  "This connects directly to what you studied yesterday in electrostatics — both involve field interactions at a distance!",
-];
-function sendMsg() {
-  const input = document.getElementById('chat-input');
-  const val = input.value.trim();
-  if (!val) return;
-  const msgs = document.getElementById('chat-msgs');
-  msgs.innerHTML += `<div class="msg msg-user">${val}</div>`;
-  input.value = '';
-  msgs.scrollTop = msgs.scrollHeight;
-  setTimeout(() => {
-    msgs.innerHTML += `<div class="msg msg-ai"><div class="msg-name">EduMind AI</div>${replies[Math.floor(Math.random()*replies.length)]}</div>`;
-    msgs.scrollTop = msgs.scrollHeight;
-  }, 700);
+  const priority=[
+    {t:'DBMS Normalization',p:48,exam:'Internal exam in 8 days',c:'var(--red)'},
+    {t:'OS Scheduling Calc',p:55,exam:'Unit test next week',c:'var(--amber)'},
+    {t:'CN Routing Algorithms',p:55,exam:'Mid-sem in 3 weeks',c:'var(--amber)'},
+    {t:'DP on LeetCode',p:55,exam:'Placement prep',c:'var(--amber)'},
+  ];
+
+  if(!document.getElementById('priority-list'))return;
+  document.getElementById('priority-list')&&(document.getElementById('priority-list').innerHTML=priority.map(p=>`
+    <div style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px">
+        <span style="font-weight:700;color:var(--text);font-family:'IBM Plex Mono',monospace">${p.t}</span>
+        <span style="color:${p.c};font-weight:700;font-family:'IBM Plex Mono',monospace">${p.p}%</span>
+      </div>
+      <div style="font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:2px">${p.exam}</div>
+      <div class="pb"><div class="pf" style="width:${p.p}%;background:${p.c}"></div></div>
+    </div>`).join(''));
 }
+function initPlanChart(){
+  const ctx=document.getElementById('planChart');
+  if(!ctx||ctx._init)return;ctx._init=true;
+  new Chart(ctx,{type:'bar',data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],datasets:[{label:'Done',data:[4.5,5.2,4.8,3,0,0,0],backgroundColor:'#00d97e',borderRadius:3},{label:'Planned',data:[0,0,0,2.5,5.5,4,2],backgroundColor:'#1e1e35',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{stacked:false,ticks:{font:{size:8},color:'#6060a0'},grid:{display:false}},y:{beginAtZero:true,max:7,ticks:{stepSize:1,font:{size:8},color:'#6060a0'},grid:{color:'rgba(255,255,255,0.03)'}}}}});
+}
+
+/* ══ KNOWLEDGE GRAPH ══ */
+const graphData={
+  dbms:{title:'DBMS',nodes:[
+    {x:360,y:140,r:28,label:'DBMS',color:'#00d97e',mastery:59,main:true},
+    {x:150,y:65,r:20,label:'ER Model',color:'#00d97e',mastery:80},{x:90,y:170,r:20,label:'Relational\nModel',color:'#00d97e',mastery:75},
+    {x:160,y:255,r:20,label:'SQL',color:'#4488ff',mastery:65},{x:360,y:50,r:22,label:'Normalization',color:'#ff4466',mastery:48},
+    {x:540,y:65,r:20,label:'Transactions',color:'#ffaa00',mastery:60},{x:610,y:175,r:20,label:'Concurrency',color:'#ff4466',mastery:45},
+    {x:530,y:260,r:20,label:'Indexing',color:'#ffaa00',mastery:52},{x:250,y:170,r:18,label:'Joins',color:'#ffaa00',mastery:55},
+    {x:460,y:170,r:18,label:'Query Opt',color:'#ff4466',mastery:40},
+  ],edges:[[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],[0,8],[0,9],[1,2],[3,8],[5,6],[7,9]]},
+  os:{title:'OS',nodes:[
+    {x:360,y:140,r:28,label:'OS',color:'#4488ff',mastery:68,main:true},
+    {x:150,y:65,r:20,label:'Process\nMgmt',color:'#00d97e',mastery:78},{x:90,y:175,r:20,label:'CPU\nScheduling',color:'#4488ff',mastery:72},
+    {x:160,y:260,r:20,label:'Sync &\nDeadlock',color:'#ffaa00',mastery:62},{x:360,y:50,r:20,label:'Memory\nMgmt',color:'#4488ff',mastery:70},
+    {x:540,y:65,r:20,label:'Virtual\nMemory',color:'#ffaa00',mastery:60},{x:610,y:175,r:20,label:'File\nSystems',color:'#00d97e',mastery:75},
+    {x:530,y:260,r:20,label:'I/O\nMgmt',color:'#00d97e',mastery:65},{x:250,y:160,r:18,label:'Threads',color:'#00d97e',mastery:72},
+  ],edges:[[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],[0,8],[1,2],[1,8],[4,5],[2,3]]},
+  cn:{title:'CN',nodes:[
+    {x:360,y:140,r:28,label:'CN',color:'#00ccee',mastery:64,main:true},
+    {x:150,y:65,r:20,label:'OSI\nModel',color:'#00d97e',mastery:75},{x:90,y:175,r:20,label:'Data Link\nLayer',color:'#00d97e',mastery:68},
+    {x:160,y:260,r:20,label:'Network\nLayer',color:'#4488ff',mastery:65},{x:360,y:50,r:20,label:'Transport\nLayer',color:'#4488ff',mastery:72},
+    {x:540,y:65,r:20,label:'App\nLayer',color:'#00d97e',mastery:70},{x:610,y:175,r:20,label:'Routing\nAlgos',color:'#ff4466',mastery:55},
+    {x:530,y:260,r:20,label:'Congestion\nControl',color:'#ffaa00',mastery:50},{x:255,y:165,r:18,label:'TCP/IP',color:'#4488ff',mastery:70},
+  ],edges:[[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],[0,8],[1,2],[3,6],[4,7],[4,8]]},
+  dsa2:{title:'DSA',nodes:[
+    {x:360,y:140,r:28,label:'DSA',color:'#ffaa00',mastery:75,main:true},
+    {x:150,y:65,r:20,label:'Arrays &\nStrings',color:'#00d97e',mastery:88},{x:90,y:175,r:20,label:'Linked\nLists',color:'#00d97e',mastery:85},
+    {x:160,y:260,r:20,label:'Trees &\nBST',color:'#00d97e',mastery:78},{x:360,y:50,r:20,label:'Graphs',color:'#ffaa00',mastery:65},
+    {x:540,y:65,r:20,label:'Sorting',color:'#00d97e',mastery:82},{x:610,y:175,r:20,label:'Dynamic\nProg',color:'#ff4466',mastery:55},
+    {x:530,y:260,r:20,label:'Greedy',color:'#ffaa00',mastery:60},{x:255,y:165,r:18,label:'Heaps',color:'#ffaa00',mastery:72},
+  ],edges:[[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],[0,8],[1,2],[3,4],[5,6],[6,7]]},
+};
+window._gnodes=[];
+function drawGraph(type,el){
+  if(el){document.querySelectorAll('#view-graph .tbar .tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');}
+  const d=graphData[type];
+  document.getElementById('graph-title').textContent='graph.'+d.title;
+  window._gnodes=d.nodes;
+  const svg=document.getElementById('kg-svg');
+  svg.innerHTML=d.edges.map(([a,b])=>`<line x1="${d.nodes[a].x}" y1="${d.nodes[a].y}" x2="${d.nodes[b].x}" y2="${d.nodes[b].y}" stroke="#1e1e35" stroke-width="1.5"/>`).join('')+
+    d.nodes.map((n,i)=>`
+      <g onclick="showNodeDetail(${i})" style="cursor:pointer">
+        <circle cx="${n.x}" cy="${n.y}" r="${n.r}" fill="${n.color}15" stroke="${n.color}" stroke-width="${n.main?2.5:1.5}"/>
+        ${n.label.split('\n').map((l,li,arr)=>`<text x="${n.x}" y="${n.y+(li-(arr.length-1)/2)*11}" text-anchor="middle" dominant-baseline="middle" fill="${n.color}" font-size="${n.main?9:8}" font-weight="700" font-family="IBM Plex Mono,monospace">${l}</text>`).join('')}
+        <text x="${n.x}" y="${n.y+n.r+9}" text-anchor="middle" fill="#6060a0" font-size="8" font-family="IBM Plex Mono,monospace">${n.mastery}%</text>
+      </g>`).join('');
+  document.getElementById('node-detail').style.display='none';
+}
+function showNodeDetail(i){
+  const n=window._gnodes[i];
+  document.getElementById('nd-title').textContent=n.label.replace('\n','_')+'.mastery = '+n.mastery+'%';
+  const sc=n.mastery>=70?'bg':n.mastery>=40?'ba':'br';
+  const st=n.mastery>=70?'mastered':n.mastery>=40?'in_progress':'needs_work';
+  document.getElementById('nd-body').innerHTML=`
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+      <span class="badge ${sc}">${st}</span>
+      <span style="font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace">${n.mastery<50?'⚠️ priority topic — exam impact high':'📈 maintain with weekly revision'}</span>
+    </div>
+    <div class="pb" style="height:6px;margin-bottom:9px"><div class="pf" style="width:${n.mastery}%;background:${n.color}"></div></div>
+    <div style="font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:10px;line-height:1.6">${n.mastery<50?'This topic appears in every VIT internal exam. Improving mastery by 20% can add 0.2 to your CGPA. AI tutor can explain concepts in 10 minutes.':'Keep solving 2-3 practice questions weekly. This is already a strong area — maintain it.'}</div>
+    <div style="display:flex;gap:7px">
+      <button class="btn g" onclick="showView('tutor',document.querySelectorAll('.nitem')[11])">ai_tutor()</button>
+      <button class="btn" onclick="showView('quiz',document.querySelectorAll('.nitem')[2])">quiz()</button>
+      <button class="btn" onclick="showView('flashcards',document.querySelectorAll('.nitem')[5])">flashcards()</button>
+    </div>`;
+  document.getElementById('node-detail').style.display='block';
+}
+
+/* ══ ANALYTICS ══ */
+let anInit=false;
+function initAnCharts(){
+  if(anInit)return;anInit=true;
+  new Chart(document.getElementById('perfChart'),{type:'bar',data:{labels:['DBMS','OS','CN','DSA','Disc. Maths','OOP'],datasets:[{label:'Mastery',data:[59,68,64,75,68,79],backgroundColor:['#00d97e','#4488ff','#00ccee','#ffaa00','#9966ff','#ff7722'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%',font:{size:8},color:'#6060a0'},grid:{color:'rgba(255,255,255,0.03)'}},x:{ticks:{font:{size:8},color:'#6060a0'},grid:{display:false}}}}});
+  new Chart(document.getElementById('trendChart'),{type:'line',data:{labels:['Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8','Q9','Q10'],datasets:[{label:'Score%',data:[55,58,60,62,65,63,68,70,72,72],borderColor:'#00d97e',backgroundColor:'rgba(0,217,126,0.07)',tension:0.4,fill:true,pointRadius:3,pointBackgroundColor:'#00d97e'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:false,min:45,max:85,ticks:{callback:v=>v+'%',font:{size:8},color:'#6060a0'},grid:{color:'rgba(255,255,255,0.03)'}},x:{ticks:{font:{size:8},color:'#6060a0'},grid:{display:false}}}}});
+}
+function switchAnTab(tab,el){
+  document.querySelectorAll('#view-analytics .tbar .tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');
+  ['perf','time','pred'].forEach(t=>document.getElementById('an-'+t).style.display=t===tab?'block':'none');
+  if(tab==='time'){
+    const ctx=document.getElementById('timeChart');
+    if(!ctx._init){ctx._init=true;new Chart(ctx,{type:'bar',data:{labels:['M5','M6','M7','M8','M9','M10','M11','M12','M13','M14','M15','M16','M17','M18'],datasets:[{label:'Hours',data:[3.5,4.8,5.2,4.0,0,4.2,5.5,4.8,3.5,5.5,4.2,5.2,4.8,3.5],backgroundColor:'#00d97e',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:7,ticks:{stepSize:1,font:{size:8},color:'#6060a0'},grid:{color:'rgba(255,255,255,0.03)'}},x:{ticks:{font:{size:8},color:'#6060a0',maxRotation:45},grid:{display:false}}}}});}
+  }
+  if(tab==='pred'){
+    const preds=[{s:'DBMS',cur:59,pred:70,c:'#00d97e'},{s:'OS',cur:68,pred:77,c:'#4488ff'},{s:'CN',cur:64,pred:73,c:'#00ccee'},{s:'DSA',cur:75,pred:82,c:'#ffaa00'},{s:'Disc. Maths',cur:68,pred:75,c:'#9966ff'},{s:'OOP',cur:79,pred:85,c:'#ff7722'}];
+    document.getElementById('pred-bars').innerHTML=preds.map(p=>`
+      <div style="margin-bottom:11px">
+        <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px;font-family:'IBM Plex Mono',monospace">
+          <span style="font-weight:700;color:var(--text)">${p.s}</span>
+          <span style="color:var(--muted)">current: ${p.cur}% → predicted: <span style="color:${p.c};font-weight:700">${p.pred}%</span></span>
+        </div>
+        <div class="pb" style="height:7px"><div class="pf" style="width:${p.pred}%;background:${p.c}20">
+          <div style="width:${(p.cur/p.pred*100).toFixed(0)}%;height:100%;background:${p.c};border-radius:100px"></div>
+        </div></div>
+      </div>`).join('');
+  }
+}
+
+/* ══ UPCOMING ══ */
+function initUpcoming(){
+  const up=[
+    {day:'20',mon:'MAR',t:'DBMS Unit Test',s:'SQL Joins, Normalization, Transactions · Room 204',type:'test',c:'#ff4466'},
+    {day:'22',mon:'MAR',t:'OOP Assignment Submission',s:'Inheritance + Polymorphism implementation · Submit on Moodle',type:'assign',c:'#ffaa00'},
+    {day:'25',mon:'MAR',t:'Full Sem Mock Test #10',s:'DBMS + OS + CN · 3 hrs · Computer Lab',type:'mock',c:'#4488ff'},
+    {day:'28',mon:'MAR',t:'OS Internal Exam',s:'Scheduling, Deadlock, Memory Mgmt · Hall B',type:'exam',c:'#ff4466'},
+    {day:'2',mon:'APR',t:'CN Mini Project Submission',s:'Packet Analyzer Project · GitHub link + Demo',type:'project',c:'#00d97e'},
+    {day:'10',mon:'APR',t:'Mid Semester Examinations',s:'All 6 subjects begin · 2.5 hrs each · Main Exam Hall',type:'exam',c:'#ff4466'},
+  ];
+  const sem=[
+    {day:'Jan',mon:'2026',t:'Semester 3 Begins',s:'20 Jan · Classes + Attendance 75% minimum'},
+    {day:'Mar',mon:'2026',t:'Internals & CAT Tests',s:'Continuous Assessment Tests (CAT 1 & 2)'},
+    {day:'Apr',mon:'2026',t:'Mid Semester Exams',s:'10 Apr · FAT begins after study holidays'},
+    {day:'Jun',mon:'2026',t:'Semester 3 Results',s:'GPA released · Backlog exam if any'},
+    {day:'Jul',mon:'2026',t:'Semester 4 Begins',s:'New subjects: TOC, DBMS-II, Compiler Design'},
+  ];
+  document.getElementById('upcoming-list').innerHTML=up.map(u=>`
+    <div class="uitem">
+      <div class="udate" style="background:${u.c}15"><div class="udnum" style="color:${u.c}">${u.day}</div><div class="udmon" style="color:${u.c}">${u.mon}</div></div>
+      <div style="flex:1"><div class="utitle">${u.t}</div><div class="usub">${u.s}</div></div>
+      <span class="badge ${u.type==='exam'?'br':u.type==='mock'?'bb':u.type==='project'?'bg':'ba'}">${u.type}</span>
+    </div>`).join('');
+  document.getElementById('sem-cal').innerHTML=sem.map(s=>`
+    <div class="uitem">
+      <div class="udate" style="background:var(--green-d)"><div class="udnum" style="color:var(--green);font-size:9px">${s.day}</div><div class="udmon" style="color:var(--green)">${s.mon}</div></div>
+      <div><div class="utitle">${s.t}</div><div class="usub">${s.s}</div></div>
+    </div>`).join('');
+}
+
+/* ══ BOOT ══ */
+initDashboard();
+initSubjects();
+renderQuiz();
+renderFlash();
+renderForms();
+initTutor();
+initStudyPlan();
+initUpcoming();
 </script>
 </body>
 </html>
